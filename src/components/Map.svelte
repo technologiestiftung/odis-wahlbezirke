@@ -5,8 +5,10 @@
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";
   
-  let map;
+  export let map;
   let container;
+
+  export let mapReady = false;
 
   mapbox.accessToken = __global.env.MAPBOXKEY;
 
@@ -50,6 +52,8 @@
         'fill-opacity': 0.8
       }
     });
+
+    mapReady = true;
   };
 
   onMount(() => {
