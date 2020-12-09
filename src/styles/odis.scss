@@ -172,4 +172,38 @@
     font-size: 12px !important;
     align-items: center;
   }
+
+  .footer-links:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: white;
+  }
+
+  svg:hover polygon {
+    fill: lighten(#213A8F, 20%);
+  }
+
+  svg.logo-berlin:hover path {
+      fill: #E60032;
+  }
+
+  svg.logo-stiftung:hover path {
+      fill: #E60032;
+  }
+
+  svg.logo-opendata:hover path {
+      fill: rgb(72, 103, 206);
+  } 
+
+  svg.logo-ibb:hover  {
+      path#letter {
+          fill: black;
+      }
+      polygon#letter {
+          fill: black;
+      }
+      path#Shape {
+          fill: #00ACCF;
+      }
+  }
 }
