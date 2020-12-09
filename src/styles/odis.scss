@@ -1,0 +1,175 @@
+/*
+ * The styles are extracted from the official ODIS website and simply wrapped in a div.odis for safe keeping
+ */
+.odis{
+  a {
+    color: #000;
+    font-family: 'Clan Medium', sans-serif;
+    text-decoration: underline;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+  }
+
+  .bl {
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+  }
+
+  .section {
+    max-width: 64rem;
+    width: 85%;
+    margin: 0 auto;
+    position: relative;
+    scroll-behavior: smooth;
+  }
+
+  .blog-link {
+    padding-bottom: 4%;
+    text-decoration: none;
+    color: black;
+    display: flex;
+    font-weight: 700;
+    margin-left: 60px;
+    font-family: 'Clan Medium', sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  .blog-link::before {
+    content: '';
+    position: absolute;
+    transform: translateX(-60px) translateY(-14px);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #ced4da;
+    transition: .1s background linear;
+    box-sizing: border-box;
+  }
+
+  .blog-link-back::after {
+    background-image: url(/assets/images/odis-arrow.svg);
+    transform: translateY(2px) translateX(-1px) rotate(180deg);
+    background-size: contain;
+    content: ' ';
+    width: 9px;
+    position: absolute;
+    height: 15px;
+    left: 20px;
+    box-sizing: border-box;
+  }
+
+  .blog-link-back:hover::after {
+    transform: translateY(2px) translateX(-1px) rotate(180deg);
+    background-image: url(/assets/images/odis-arrow.white.svg);
+    background-size: contain;
+    content: ' ';
+    width: 9px;
+    position: absolute;
+    height: 15px;
+    left: 20px;
+  }
+
+  .blog-link:hover::before {
+    content: '';
+    position: absolute;
+    transform: translateX(-60px) translateY(-14px);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 100%;
+    background: #E60032;
+    transition: .1s background linear;
+  }
+
+  .headline-05 {
+    font-size: 14px;
+    font-style: italic;
+    line-height: 160%;
+    color: #000000;
+    padding-bottom: 2rem;
+  }
+
+  .headline-02b {
+    font-family: 'Clan Medium', sans-serif;
+    font-size: 24px;
+    line-height: 140%;
+    margin-bottom: 2rem;
+    color: #000000;
+  }
+
+  .headline-04 {
+    font-size: 16px;
+    line-height: 160%;
+    color: #000000;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  
+  h1 {
+    font-family: 'Clan Medium', sans-serif;
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #E60032;
+  }
+
+  .section-wrapper.white {
+    background: white;
+    height: auto;
+    min-width: 100%;
+    scroll-behavior: smooth;
+    color: white;
+  }
+
+  .pb-5, .py-5 {
+    padding-bottom: 3rem !important;
+  }
+  .pt-5, .py-5 {
+      padding-top: 3rem !important;
+  }
+
+  .credentials {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  .logo-stiftung {
+    transform: translateX(-20px);
+  }
+
+  .logo-opendata {
+    margin-right: 3rem;
+  }
+
+  .logo-berlin {
+    margin-right: 3rem;
+  }
+
+  svg {
+      overflow: hidden;
+      vertical-align: middle;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    height: 5em;
+    background: #213A8F;
+  }
+
+  .footer-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 2em;
+    width: 75%;
+  }
+
+  .footer-links {
+    color: white;
+    text-decoration: none;
+    font-size: 12px !important;
+    align-items: center;
+  }
+}
