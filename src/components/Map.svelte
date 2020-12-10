@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import { extent, blocks, districts, districtMap, blockMap, neighbors, neighborMap } from "../stores.js"
+  import { extent, blocks, districts, districtMap, blockMap, neighbors, neighborMap } from "../stores"
 
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";

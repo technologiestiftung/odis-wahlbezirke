@@ -9,7 +9,7 @@
 
   let active = false;
   let optimization_state = "stop";
-  const list_color = scaleLinear().range(['rgb(255,255,255)', 'rgb(255,0,0)']);
+  const list_color = scaleLinear<string>().range(['rgb(255,255,255)', 'rgb(255,0,0)']);
 
   $: if (mapReady) {
     map.setPaintProperty('blocks', 'fill-color', ['get', 'color']);
@@ -19,12 +19,7 @@
       0.7,
       0.2
     ]);
-    map.setPaintProperty('blocks', 'fill-outline-color', [
-      'case',
-      ['>', ['get', 'Insgesamt'], 2500],
-      'red',
-      'transparent'
-    ]);
+    
 
    setupSimulation()
   }
@@ -104,7 +99,7 @@
             // calculate the smallest damage
             let smallest_damage = Number.MAX_VALUE;
             let smallest_damage_id = null;
-            neighbor_districts.forEach((neighbor) => {
+            neighbor_districts.forEach((neighbor: number) => {
               const damage = $simulationDistricts[$districtMap[neighbor]].population + population - 2500;
               if (damage < smallest_damage) {
                 smallest_damage = damage;

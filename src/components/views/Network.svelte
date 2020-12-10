@@ -1,6 +1,6 @@
 <script lang="ts">
   import Map from  '../Map.svelte';
-  import {neighbors, neighborMap, blocks, blockMap} from '../../stores.js';
+  import {neighbors, neighborMap, blocks, blockMap} from '../../stores';
   
   let map;
   let mapReady;

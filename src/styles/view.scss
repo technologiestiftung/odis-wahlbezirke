@@ -22,7 +22,7 @@
   width:54px;
   height:auto; 
   float:left;
-  margin-right:10px;
+  margin: 0 10px 10px 0;
 }
 
 #sidebar button{
@@ -38,6 +38,7 @@
   &:hover{
     background: #b10026;
   }
+  clear:both;
 }
 
 /*----- Population / Network -----*/
