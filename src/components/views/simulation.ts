@@ -1,5 +1,5 @@
 // http://stackoverflow.com/questions/962802#962890
-export const shuffledList = (count) => {
+export const shuffledList = (count: number): number[] => {
   const array = [];
   for (let i = 0; i<count; i+=1) {
     array.push(i);

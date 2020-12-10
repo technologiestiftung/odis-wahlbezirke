@@ -130,9 +130,9 @@
       }
     });
 
-    map.fitBounds($extent, {
-      padding: 20
-    });
+    // map.fitBounds($extent, {
+    //   padding: 20
+    // });
 
     mapReady = true;
   };

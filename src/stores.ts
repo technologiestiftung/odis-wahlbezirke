@@ -9,6 +9,7 @@ export const districtMap = writable({});
 export const simulationDistricts = writable([]);
 export const neighbors = writable({ features: [] });
 export const neighborMap = writable([]);
+export const stats = writable([]);
 export const states: Writable<{ 
   population: number ,
   uwb: string,

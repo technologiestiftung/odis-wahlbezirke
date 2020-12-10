@@ -2,7 +2,7 @@
   import { states, blocks, districts, blockMap, districtMap, simulationBlocks, simulationDistricts } from '../../stores';
   import {scaleLinear, max} from 'd3';
   import Map from  '../Map.svelte';
-  import {shuffledList, isCandidate} from './simulation.js';
+  import {shuffledList, isCandidate} from './simulation';
   
   let map;
   let mapReady;
@@ -125,7 +125,7 @@
     update();
     $states = $states.concat([JSON.parse(JSON.stringify($simulationDistricts))]);
 
-    if (optimization_state === "pause") {
+    if (optimization_state === "pause" || $states.length === 100) {
       optimization_state = "stop";
     } else {
       setTimeout(optimization, 300);
