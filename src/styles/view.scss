@@ -1,0 +1,60 @@
+#viewContainer{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  &>*{
+    flex-grow: 1;
+    height: 100%;
+    flex-basis:100%;
+    box-sizing: border-box;
+    overflow-y:auto;
+  }
+}
+
+#sidebar .pointer{
+  width:54px;
+  height:auto; 
+  float:left;
+  margin-right:10px;
+}
+
+#sidebar button{
+  transition: background 0.1s;
+  cursor: pointer;
+  background: #E60032;
+  font-family: 'Clan Book', sans-serif;
+  font-size: 16px;
+  padding: .75rem 1.5rem;
+  border-radius: 5px;
+  color: white;
+  border: 0px solid;
+  &:hover{
+    background: #b10026;
+  }
+}
+
+/*----- Population -----*/
+#viewContainer.population{
+  #sidebar{
+    flex-grow: 1;
+    flex-basis: 20%;
+    padding: 15px;
+    font-size: 12px;
+    h3{
+      font-size: 16px;
+      padding-bottom: 5px;
+      font-family: "Clan Medium", sans-serif;
+    }
+  }
+  #map{
+    flex-grow: 4;
+    flex-basis: 80%;
+  }
+}
+
+.population #sidebar{
+  height: 100%;
+  background-color: rgb(220,220,220);
+}

@@ -59,4 +59,6 @@
 	@import 'styles/global';
 	@import 'styles/nav';
 	@import 'styles/odis';
+	@import 'styles/map';
+	@import 'styles/view';
 </style>

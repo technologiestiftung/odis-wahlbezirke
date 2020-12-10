@@ -1,10 +1,12 @@
 <script lang="ts">
 
-  import { blocks } from "../stores.js"
+  import { extent, blocks, districts, districtMap, blockMap, neighbors, neighborMap } from "../stores.js"
 
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";
-  
+  import {scaleOrdinal, schemeCategory10} from 'd3';
+  import {centroid, bbox, AllGeoJSON} from '@turf/turf';
+
   export let map;
   let container;
 
@@ -21,6 +23,8 @@
       scrollZoom: false,
     });
 
+    map.addControl(new mapbox.NavigationControl(), 'bottom-left');
+
     map.on("load", () => {
 
       if("type" in $blocks){
@@ -29,7 +33,77 @@
         fetch('/assets/data/blocks.geojson')
           .then((response) => response.json())
           .then((json) => {
+            const tempDistrictMap = {};
+            const tempDistricts = [];
+            const tempBlockMap = {};
+
+            const tempNeighbors = {
+              type: 'FeatureCollection',
+              features: [],
+            };
+            const tempNeighborMap = [];
+
+            // Calculate overall population in voting districts based on block sum
+            json.features.forEach((feature, fi) => {
+              const uwb = feature.properties.UWB;
+              feature.properties.centroid = centroid(feature).geometry.coordinates;
+              tempBlockMap[feature.properties.blknr_copy] = fi;
+
+              if (!(uwb in tempDistrictMap)) {
+                tempDistrictMap[uwb] = tempDistricts.length;
+                tempDistricts.push({
+                  uwb,
+                  population: 0,
+                  num_blocks: 0,
+                  blocks: [],
+                  points: []
+                });
+              }
+              // TODO columns from env
+              tempDistricts[tempDistrictMap[uwb]].population += feature.properties["Insgesamt"];
+              tempDistricts[tempDistrictMap[uwb]].num_blocks += 1;
+              tempDistricts[tempDistrictMap[uwb]].blocks.push(feature.properties.blknr_copy);
+              tempDistricts[tempDistrictMap[uwb]].points = tempDistricts[tempDistrictMap[uwb]].points.concat(feature.geometry.coordinates[0]);
+            });
+
+            // Assign population of voting district to individual blocks (for vis)
+            const district_colors = scaleOrdinal(schemeCategory10);
+            json.features.forEach((feature, fi) => {
+              const uwb = feature.properties.UWB;
+              feature.properties.districtPopulation = tempDistricts[tempDistrictMap[uwb]].population;
+              feature.properties.color = district_colors(uwb);
+              feature.id = fi;
+              
+              feature.properties.neighbor_blocks.forEach((neighbor) => {
+                const key = [feature.properties.blknr_copy, neighbor].sort().join('-');
+                if (!tempNeighborMap.includes(key)) {
+                  tempNeighbors.features.push({
+                    type: 'Feature',
+                    id: tempNeighborMap.length,
+                    properties: {
+                      ids: [feature.properties.blknr_copy, neighbor]
+                    },
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: [
+                        feature.properties.centroid,
+                        json.features[tempBlockMap[neighbor]].properties.centroid
+                      ]
+                    }
+                  });
+                  tempNeighborMap.push(key);
+                }
+              });
+            });
+
+            $neighbors = tempNeighbors;
+            $neighborMap = tempNeighborMap;
             $blocks = json;
+            $extent = bbox(json);
+            $blockMap = tempBlockMap;
+            $districts = tempDistricts;
+            $districtMap = tempDistrictMap;
+
             setupGeoJson();
           });
       }
@@ -53,7 +127,50 @@
       }
     });
 
+    map.fitBounds($extent, {
+      padding: 20
+    });
+
     mapReady = true;
+  };
+
+  export const addPopUp = () => {
+    const popup = new mapbox.Popup({
+      closeButton: false,
+      closeOnClick: false
+    });
+ 
+    map.on('mousemove', 'blocks', (e) => {
+      if (e.features.length > 0) {
+        map.getCanvas().style.cursor = 'pointer';
+        
+        const description = `<div id="mapbox-popup">
+          <p class="headline">ID: ${e.features[0].properties.blknr_copy}</p>
+          <p>Bevölkerung:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Block</th>
+                <th>Wahlbezirk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${e.features[0].properties.Insgesamt}</td>
+                <td>${e.features[0].properties.districtPopulation}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>`;
+        
+        popup.setLngLat(e.lngLat).setHTML(description).addTo(map);
+      }
+    });
+    
+    map.on('mouseleave', 'blocks', () => {
+      map.getCanvas().style.cursor = '';
+      popup.remove();
+    });
   };
 
   onMount(() => {
@@ -79,14 +196,7 @@
   });
 </script>
 
-<style>
-  div {
-    width: 100%;
-    height: 100%;
-  }
-</style>
-
-<div bind:this={container}>
+<div id="map" bind:this={container}>
   {#if map}
     <slot />
   {/if}
