@@ -30,7 +30,7 @@
       if("type" in $blocks){
         setupGeoJson();
       } else {
-        fetch('/assets/data/blocks.geojson')
+        fetch('/assets/data/blocks_improved.geojson')
           .then((response) => response.json())
           .then((json) => {
             const tempDistrictMap = {};

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Map from  '../Map.svelte';
-  import {neighbors, neighborMap, blocks} from '../../stores.js';
+  import {neighbors, neighborMap, blocks, blockMap} from '../../stores.js';
   
   let map;
   let mapReady;
@@ -103,7 +103,7 @@
 
     map.on('click', 'network', (e) => {
       e.originalEvent.cancelBubble = true;
-      let deleteId = false;
+      let deleteId = null;
       const ids = JSON.parse(e.features[0].properties.ids);
       $neighbors.features.forEach((feature, fi) => {
         if (feature.properties.ids.join('-') === ids.join('-')) {
@@ -115,6 +115,7 @@
       }
       map.getSource('network').setData($neighbors);
       $neighborMap.splice($neighborMap.indexOf(ids.sort().join('-')), 1);
+      updateBlocksFromNeighbors();
     });
 
     let lastBlock = null;
@@ -147,6 +148,7 @@
           });
           $neighborMap.push([e.features[0].properties.blknr_copy, lastBlock.properties.blknr_copy].sort().join('-'))
           map.getSource('network').setData($neighbors);
+          updateBlocksFromNeighbors();
         }
         map.setFeatureState(
           { source: 'blocks', id: lastBlock.id },
@@ -159,7 +161,22 @@
   }
 
   const updateBlocksFromNeighbors = () => {
+    $blocks.features.forEach((feature) => {
+      feature.properties.neighbor_blocks = [];
+      feature.properties.neighbors = [];
+    });
 
+    $neighbors.features.forEach((feature) => {
+      feature.properties.ids.forEach((id, i) => {
+        const otherId = (i === 0) ? feature.properties.ids[1] : feature.properties.ids[0];
+        $blocks.features[$blockMap[id]].properties.neighbor_blocks.push(otherId);
+
+        const uwb = $blocks.features[$blockMap[otherId]].properties.UWB;
+        if (!($blocks.features[$blockMap[id]].properties.neighbors.includes(uwb))) {
+          $blocks.features[$blockMap[id]].properties.neighbors.push(uwb);
+        }
+      });
+    });
   };
 
   const downloadGeoJson = () => {
