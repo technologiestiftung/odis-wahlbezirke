@@ -30,6 +30,7 @@
   cursor: pointer;
   background: #E60032;
   font-family: 'Clan Medium', sans-serif;
+  font-weight: 700;
   font-size: 12px;
   padding: .75rem 1.5rem;
   border-radius: 5px;
@@ -53,6 +54,7 @@
       font-size: 16px;
       padding-bottom: 5px;
       font-family: "Clan Medium", sans-serif;
+      font-weight: 700;
     }
   }
   #map{
@@ -73,6 +75,7 @@
       font-size: 16px;
       padding-bottom: 5px;
       font-family: "Clan Medium", sans-serif;
+      font-weight: 700;
     }
     button.hidden{
       display:none;
@@ -93,6 +96,7 @@
     align-items: center;
     span{
       font-family: "Clan Medium", sans-serif;
+      font-weight: 700;
     }
     span.icon{
       text-align: center;
@@ -162,6 +166,7 @@
     font-size: 16px;
     padding-bottom: 5px;
     font-family: "Clan Medium", sans-serif;
+    font-weight: 700;
     clear:both;
     padding-top:10px;
     flex-grow: 0;
@@ -201,6 +206,7 @@
       font-size: 16px;
       padding-bottom: 5px;
       font-family: "Clan Medium", sans-serif;
+      font-weight: 700;
     }
     button.hidden{
       display:none;
