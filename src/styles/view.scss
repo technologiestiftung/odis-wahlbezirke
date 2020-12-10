@@ -29,8 +29,8 @@
   transition: background 0.1s;
   cursor: pointer;
   background: #E60032;
-  font-family: 'Clan Book', sans-serif;
-  font-size: 16px;
+  font-family: 'Clan Medium', sans-serif;
+  font-size: 12px;
   padding: .75rem 1.5rem;
   border-radius: 5px;
   color: white;
@@ -57,6 +57,7 @@
   #map{
     flex-grow: 4;
     flex-basis: 80%;
+    overflow-y:hidden;
   }
 }
 
@@ -79,34 +80,54 @@
   #map{
     flex-grow: 2;
     flex-basis: 40%;
+    overflow-y:hidden;
   }
   #simulation{
     flex-grow: 2;
     flex-basis: 40%;
   }
 
-  #startButton{
+  button{
+    display: flex;
+    align-items: center;
+    span{
+      font-family: "Clan Medium", sans-serif;
+    }
     span.icon{
-      display:inline-block;
       text-align: center;
       width: 25px;
+      font-size:20px;
+      line-height:0;
     }
-    .icon.stop{
+    span.icon.stop,
+    span.icon.start{
+      padding-bottom:5px;
+    }
+  }
+  .stop{
+    display:none;
+  }
+  .start{
+    display:inline-block;
+  }
+  .active{
+    .stop{
+      display:inline-block;
+    }
+    .start{
       display:none;
     }
-    &.active{
-      .icon.stop{
-        display:inline-block;
-      }
-      .icon.start{
-        display:none;
-      }
-    }
+  }
+  button.active.start{
+    display:none;
   }
 }
 
 #simulation{
   padding:15px;
+  display:flex;
+  flex-direction: column;
+  background-color:rgb(220,220,220);
 
   ul,li{
     list-style:none;
@@ -122,7 +143,6 @@
   }
   ul.over{
     clear:both;
-    padding-top:15px;
 
     li {
       width:90px;
@@ -131,5 +151,40 @@
       padding:2px;
       text-align: center;
     }
+  }
+  ul{
+    flex-grow: 0;
+    flex-shrink:1;    
+  }
+
+  h3{
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-family: "Clan Medium", sans-serif;
+    clear:both;
+    padding-top:10px;
+    flex-grow: 0;
+    flex-shrink:1;
+    &:first-child{
+      padding-top:0;
+    }
+  }
+
+  #graph{
+    flex-grow: 1;
+    flex-shrink:0;
+    min-height: 200px;
+    svg{
+      width:100%;
+      height:100%;
+    }
+  }
+
+  .axis text{
+    font-size:12px;
+  }
+
+  .axis line {
+    stroke:rgba(255,255,255,0.5);
   }
 }

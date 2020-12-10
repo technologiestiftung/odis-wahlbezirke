@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { blocks, districts, blockMap, districtMap, simulationBlocks, simulationDistricts } from '../../stores';
+  import { states, blocks, districts, blockMap, districtMap, simulationBlocks, simulationDistricts } from '../../stores';
   import {scaleLinear, max} from 'd3';
   import Map from  '../Map.svelte';
   import {shuffledList, isCandidate} from './simulation.js';
@@ -26,10 +26,15 @@
       'transparent'
     ]);
 
-    $simulationBlocks = $blocks;
-    $simulationDistricts = $districts;
-    list_color.domain([2500, max($simulationDistricts, (d) => d.population)])
+   setupSimulation()
   }
+
+  const setupSimulation = () => {
+    $states = [];
+    $simulationBlocks = JSON.parse(JSON.stringify($blocks));
+    $simulationDistricts = JSON.parse(JSON.stringify($districts));
+    list_color.domain([2500, max($simulationDistricts, (d) => d.population)])
+  };
 
   const start = () => {
     if (!active) {
@@ -44,8 +49,10 @@
   const reset = () => {
     optimization_state = "stop";
     active = false;
-    $simulationBlocks = $blocks;
-    $simulationDistricts = $districts;
+    $states = [];
+    $simulationBlocks = JSON.parse(JSON.stringify($blocks));
+    $simulationDistricts = JSON.parse(JSON.stringify($districts));
+    map.getSource('blocks').setData($simulationBlocks);
   };
 
   const update = () => {
@@ -121,7 +128,7 @@
     });
 
     update();
-    // createState(changes);
+    $states = $states.concat([JSON.parse(JSON.stringify($simulationDistricts))]);
 
     if (optimization_state === "pause") {
       optimization_state = "stop";
@@ -139,6 +146,22 @@
       return 'white';
     }
   };
+
+  let graphHeight;
+  let graphWidth;
+  const margin = { left: 50, top:5, right:5, bottom:5};
+
+  $: sX = scaleLinear().range([0, graphWidth - margin.left - margin.right]).domain([0, $states.length - 1]);
+  $: bY = scaleLinear().range([graphHeight - margin.top - margin.bottom, margin.top]).domain([2500, max($simulationDistricts, (d) => d.population)]);
+  $: yTicks = bY.ticks(10);
+
+  $: stateX = (i, state) => {
+    return sX(i);
+  };
+
+  $: blockY = (block) => {
+    return bY(block.population);
+  };
 </script>
 
 <div id="viewContainer" class="simulation">
@@ -150,14 +173,15 @@
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Nutzen Sie die Buttons um eine Simulation zu starten, zur Veranschaulichung ist diese um ein vielfaches verlangsamt.<br /><br />
       <button id="startButton" class:hidden={!mapReady} class:active="{active}" on:click={start}>
-        <span class="icon start">▸</span><span class="icon stop">▪</span>&nbsp;starten
-      </button><br /><br />
-      <button class:hidden={!mapReady} on:click={reset}><span class="icon">↺</span>&nbsp;zurücksetzen</button>
+        <span class="icon start">▸</span><span class="icon stop">▪</span>&nbsp;<span class="start">starten</span><span class="stop">stop</span>
+      </button><br />
+      <button class="start" class:active="{active}" class:hidden={!mapReady} on:click={reset}><span class="icon">↺</span>&nbsp;zurücksetzen</button>
     </p>
   </div>
   <Map bind:map bind:mapReady />
   <div id="simulation">
     <!-- TODO: hover highlight between list and map -->
+    <h3>Wahlbezirke die Kriterium erfüllen</h3>
     <ul class="list ok">
       {#each $simulationDistricts as district, i}
       {#if district.population <= 2500}
@@ -165,6 +189,7 @@
       {/if}
       {/each}
     </ul>
+    <h3>Noch zu optimierende Wahlbezirke</h3>
     <ul class="list over">
       {#each $simulationDistricts as district, i}
       {#if district.population > 2500}
@@ -172,5 +197,33 @@
       {/if}
       {/each}
     </ul>
+    <h3>Simulationsübersicht <span>(Iteration {$states.length})</span></h3>
+    <div id="graph" bind:clientWidth={graphWidth} bind:clientHeight={graphHeight}>
+      <svg>
+        <g class="axis y-axis" transform="translate({margin.left}, {margin.top})">
+          {#each yTicks as tick}
+            <g class="tick" transform="translate(0, {bY(tick) - margin.bottom})">
+              <line x2="100%"></line>
+              <text text-anchor="end" x="-8" y="5">{tick}</text>
+            </g>
+          {/each}
+        </g>
+        <g transform="translate({margin.left}, 0)">
+          {#each $states as state, i}
+          <g transform="translate({stateX(i, state)} 0)">
+            {#each state as block}
+            {#if block.population > 2500}
+            <circle 
+              cx="0"
+              cy="{blockY(block)}"
+              r="2"
+              style="fill:{setBackground(block)}; stroke:rgba(0,0,0,0.5); stroke-width:1px;" />
+            {/if}
+            {/each}
+          </g>
+          {/each}
+        </g>
+      </svg>
+    </div>
   </div>
 </div>
