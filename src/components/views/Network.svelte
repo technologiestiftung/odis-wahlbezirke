@@ -190,7 +190,7 @@
   };
 </script>
 
-<div id="viewContainer" class="population">
+<div id="viewContainer" class="network">
   <div id="sidebar">
     <h3>Legende</h3>
     <p>

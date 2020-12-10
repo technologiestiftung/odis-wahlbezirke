@@ -5,12 +5,14 @@
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";
   import {scaleOrdinal, schemeCategory10} from 'd3';
-  import {centroid, bbox, AllGeoJSON} from '@turf/turf';
+  import {centroid, bbox} from '@turf/turf';
 
   export let map;
   let container;
 
   export let mapReady = false;
+
+  const district_colors = scaleOrdinal(schemeCategory10);
 
   mapbox.accessToken = __global.env.MAPBOXKEY;
 
@@ -53,10 +55,12 @@
                 tempDistrictMap[uwb] = tempDistricts.length;
                 tempDistricts.push({
                   uwb,
+                  id: uwb,
                   population: 0,
                   num_blocks: 0,
                   blocks: [],
-                  points: []
+                  points: [],
+                  color: district_colors(uwb)
                 });
               }
               // TODO columns from env
@@ -67,7 +71,6 @@
             });
 
             // Assign population of voting district to individual blocks (for vis)
-            const district_colors = scaleOrdinal(schemeCategory10);
             json.features.forEach((feature, fi) => {
               const uwb = feature.properties.UWB;
               feature.properties.districtPopulation = tempDistricts[tempDistrictMap[uwb]].population;
