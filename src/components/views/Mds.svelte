@@ -154,6 +154,8 @@
         $stats = newData;
         updateMds();
       });
+  } else {
+    updateMds();
   }
 
 
@@ -332,7 +334,7 @@
       {#each weightKeys as key}
       {#if !weights[key].ignore}
       <li>
-        <MdsGraph />
+        <MdsGraph bind:dimension={weights[key]} />
       </li>
       {/if}
       {/each}
