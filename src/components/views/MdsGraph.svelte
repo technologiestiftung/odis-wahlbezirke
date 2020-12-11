@@ -1,66 +1,96 @@
 <script lang="ts">
+  import {stats} from '../../stores';
+  import {bin, scaleLinear, extent} from 'd3';
+  import {onMount, createEventDispatcher} from 'svelte';
+
   export let dimension;
-  // const updateDimensions = () => {
-  //   dimensionLabels.html((d) => `${weights[d].label} (${weights[d].weight})`);
-  // };
+  export let key;
+
+  let mounted = false;
+  onMount(() => {
+		mounted = true;
+	});
+
+  let graphWidth;
+  let graphHeight;
+
+  const margin = {top: 0, right: 8, bottom: 24, left: 30};
+
+  $: graphDWidth = graphWidth - margin.left - margin.right;
+  $: graphDHeight = graphHeight - margin.top - margin.bottom;
+
+  $: histogram = bin().value((d) => d[key]).thresholds(15)($stats);
+
+  $: x = scaleLinear()
+          .range([0, graphDWidth])
+          .domain([histogram[0].x0, histogram[histogram.length - 1].x1]);
   
-  // dimensions
-  //   .append("input")
-  //   .attr("type", "range")
-  //   .attr("min", 0)
-  //   .attr("max", 10)
-  //   .attr("value", (d) => weights[d].weight)
-  //   .on("change", (d, i, nodes) => {
-  //     const val = d3.select(nodes[i]).property("value");
-  //     weights[d].weight = val;
-  //     updateDimensions();
-  
-  //     updateData();
-  //   });
-  
-  // dimensions.append("br");
-  
-  // const mWidth = 300;
-  // const mHeight = 75;
-  // const mPadding = 25;
-  // const miniGraphs = dimensions
-  //   .append("svg")
-  //   .attr("width", mWidth)
-  //   .attr("height", mHeight);
-  
-  // updateDimensions();
-  // updateTooltips();
-  
-  // d3.select("#map").append("br");
-  // const legendSvg = d3
-  //   .select("#map")
-  //   .append("svg")
-  //   .style("opacity", 0)
-  //   .attr("width", width)
-  //   .attr("height", 50);
-  
-  // const legendCount = 50;
-  // const legendScale = d3.scaleSequentialSqrt(
-  //   [0, legendCount],
-  //   d3.interpolateViridis
-  // );
-  // legendSvg
-  //   .append("g")
-  //   .attr("transform", `translate(${padding}, 0)`)
-  //   .selectAll("rect")
-  //   .data(d3.range(legendCount))
-  //   .enter()
-  //   .append("rect")
-  //   .attr("width", (width - 2 * padding) / legendCount)
-  //   .attr("height", 25)
-  //   .attr("x", (i) => ((width - 2 * padding) / legendCount) * i)
-  //   .style("fill", (i) => legendScale(i));
+  $: y = scaleLinear()
+          .range([graphDHeight, 0])
+          .domain(extent(histogram, (d) => d.length));
+
+  let yTicks = [];
+  let xTicks = [];
+
+  $: {
+    const tTicks = histogram.map((d) => d.x0).concat([histogram[histogram.length - 1].x1]);
+    xTicks = tTicks;
+    if (graphDWidth / xTicks.length < 40) {
+      xTicks = [];
+      for (let i = 0; i < tTicks.length; i += 2) {
+        xTicks.push(tTicks[i]);
+      }
+    }
+  }
+
+  const dispatch = createEventDispatcher();
+  const setKey = (key: string | null) => {
+    dispatch('setKey', {
+      key
+    });
+  };
+
+  const setWeight = () => {
+    dispatch('updateMds');
+  };
+
+  export let showPoint = false;
+
 </script>
 
-<div>
-  <span>{dimension.label}</span>
-  <input type="range" min="0" max="10" value="{dimension.weight}">
-  <svg>
-
-  </svg>
+<div class="mdsGraph" on:mouseenter={() => setKey(key)} on:mouseleave={() => setKey(null)}>
+  <span class="label">{@html dimension.label}</span>
+  <div class="weight"><div class="container">
+    <span class="weight-label">Gewichtung:&nbsp;{dimension.weight}</span>
+    <input on:change={setWeight} type="range" min="0" max="10" bind:value={dimension.weight}>
+  </div></div>
+  <div class="svg-container" bind:clientWidth={graphWidth} bind:clientHeight={graphHeight}>
+    <svg>
+      {#if mounted && $stats.length > 0}
+      <g class="bars" transform="translate({margin.left}, {margin.top})">
+        {#each histogram as bar}
+        {#if bar.length > 0}
+        <rect x="{x(bar.x0)}" y="{y(bar.length)}" height="{graphDHeight - y(bar.length)}" width="{x(bar.x1)-x(bar.x0)}" ></rect>
+        {/if}
+        {/each}
+      </g>
+      <g class="axis x-axis">
+        <line transform="translate({margin.left} {margin.top + graphDHeight})" y1="0" y2="0" x1="0" x2="{graphDWidth}" />
+        {#each xTicks as tick}
+        <line transform="translate({x(tick) + margin.left} 0)" y1="{graphDHeight + margin.top}" y2="{graphDHeight + margin.top + 4}" />
+        <text transform="translate({x(tick) + margin.left} {graphDHeight + margin.top + 16})" text-anchor="middle">{tick}</text>
+        {/each}
+      </g>
+      <g class="axis y-axis">
+        <line y1="{margin.top}" y2="{graphDHeight}" x1="{margin.left}" x2="{margin.left}" />
+        {#each yTicks as tick}
+          ticker
+        {/each}
+      </g>
+      {#if showPoint}
+      <circle r="5" cx="{margin.left + x(dimension.current_value)}" cy="{graphDHeight + margin.top}" />
+      {/if}
+      {/if}
+    </svg>
+  </div>
 </div>
