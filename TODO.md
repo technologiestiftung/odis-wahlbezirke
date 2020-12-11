@@ -1,0 +1,3 @@
+- Selbst erstellte Variante bewerten und in analyse anzeigen
+- In Analyse Variante auswählen und im Editor anzeigen
+- Editor
