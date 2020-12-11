@@ -1,4 +1,5 @@
 <script lang="ts">
+  export let dimension;
   // const updateDimensions = () => {
   //   dimensionLabels.html((d) => `${weights[d].label} (${weights[d].weight})`);
   // };
@@ -55,3 +56,11 @@
   //   .attr("x", (i) => ((width - 2 * padding) / legendCount) * i)
   //   .style("fill", (i) => legendScale(i));
 </script>
+
+<div>
+  <span>{dimension.label}</span>
+  <input type="range" min="0" max="10" value="{dimension.weight}">
+  <svg>
+
+  </svg>
+</div>
