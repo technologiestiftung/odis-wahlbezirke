@@ -58,6 +58,7 @@
   };
 
   // TODO: These are problematic districts which are excluded for now
+  // TODO: Move problems to store
   const problems = ["07608", "07609", "07614", "07613"];
 
   const optimization = () => {

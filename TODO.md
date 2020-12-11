@@ -1,3 +1,4 @@
 - Selbst erstellte Variante bewerten und in analyse anzeigen (stop/100 > analysis > store || mds concat)
 - In Analyse Variante auswählen und im Editor anzeigen
 - Editor
+- Reduce data from geojson
