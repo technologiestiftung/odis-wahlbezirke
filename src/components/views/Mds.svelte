@@ -80,10 +80,11 @@
   let graphHeight;
 
   const margin = 20;
+  const miniGraphHeight = 75;
 
   // background lines for scatterplot
   $: numXLines = Math.floor((graphWidth - margin * 2) / 20) || 10;
-  $: numYLines = Math.floor((graphHeight - margin * 2) / 20) || 10;
+  $: numYLines = Math.floor((graphHeight - margin * 2 - miniGraphHeight) / 20) || 10;
 
 // RADIUS FOR CIRCLES IN MDS SCATTERPLOT DEPEND ON HOVER...
 //   .on("mouseover", (d) => {
@@ -130,7 +131,7 @@
   };
 
   $: x = scaleLinear().range([0, graphWidth - 2 * margin]).domain(<[number, number]>extent(twoDimensions[0]));
-  $: y = scaleLinear().range([0, graphHeight - 2 * margin]).domain(<[number, number]>extent(twoDimensions[1]));
+  $: y = scaleLinear().range([0, graphHeight - 2 * margin - miniGraphHeight]).domain(<[number, number]>extent(twoDimensions[1]));
 
   if ($stats.length === 0) {
     csv('/assets/data/selected_sim_stats.csv')
@@ -302,8 +303,8 @@
           <line 
             x1="0" 
             x2="{graphWidth - 2 * margin}" 
-            y1="{(graphHeight - 2 * margin) / numYLines * i}"
-            y2="{(graphHeight - 2 * margin) / numYLines * i}"
+            y1="{(graphHeight - 2 * margin - miniGraphHeight) / numYLines * i}"
+            y2="{(graphHeight - 2 * margin - miniGraphHeight) / numYLines * i}"
             />
           {/each}
           {#each Array(numXLines + 1) as _, i}
@@ -311,7 +312,7 @@
             x1="{(graphWidth - 2 * margin) / numXLines * i}" 
             x2="{(graphWidth - 2 * margin) / numXLines * i}" 
             y1="0"
-            y2="{graphHeight - 2 * margin}"
+            y2="{graphHeight - 2 * margin - miniGraphHeight}"
             />
           {/each}
           {/if}
