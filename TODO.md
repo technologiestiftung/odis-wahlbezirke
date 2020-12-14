@@ -2,3 +2,4 @@
 - In Analyse Variante auswählen und im Editor anzeigen
 - Editor
 - Reduce data from geojson
+- move weights to store for consistency across interactions

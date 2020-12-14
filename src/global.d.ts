@@ -5,6 +5,7 @@ declare global {
     env: {
       isProd: boolean;
       MAPBOXKEY: string;
+      SERVER: string;
     }
   };
 }

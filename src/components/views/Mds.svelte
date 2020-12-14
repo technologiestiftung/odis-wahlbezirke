@@ -1,80 +1,19 @@
 <script lang="ts">
-  import {stats} from '../../stores';
+  import {stats, weights} from '../../stores';
   import MdsGraph from './MdsGraph.svelte';
   import {csv, min, max, scaleLinear, extent, scaleSqrt, interpolateViridis, scaleSequentialSqrt} from 'd3';
   import {transpose} from 'numeric';
   import {mds} from './mds';
   import { onMount } from 'svelte';
 
-  const weights = {
-    ID: {
-      ignore: true,
-    },
-    X: {
-      ignore: true,
-    },
-    Number_of_Modified_Blocks: {
-      ignore: false,
-      weight: 5,
-      label: "Anzahl verschobener Blöcke",
-    },
-    Number_of_Affected_Districts: {
-      ignore: false,
-      weight: 5,
-      label: "Anzahl betroffener Wahlbezirke",
-    },
-    Average_Area_Perimeter_Score: {
-      ignore: true,
-    },
-    Median_Area_Perimeter_Score: {
-      ignore: true,
-    },
-    Minimum_Area_Perimeter_Score: {
-      ignore: true,
-    },
-    Average_Convex_Hull_Score: {
-      ignore: false,
-      weight: 5,
-      label: "Ø Kompaktheitsindex<br />(0 = wenig kompakt, 1 = sehr kompakt)",
-    },
-    Median_Convex_Hull_Score: {
-      ignore: false,
-      weight: 5,
-      label: "Median Kompaktheitsindex<br />(0 = wenig kompakt, 1 = sehr kompakt)",
-    },
-    Minimum_Convex_Hull_Score: {
-      ignore: true,
-    },
-    Number_of_Overpopulated_Districts: {
-      ignore: false,
-      weight: 5,
-      label: "Anzahl Wahlbezirke über 2500 Ew.",
-    },
-    Average_Population_Size: {
-      ignore: false,
-      weight: 5,
-      label: "Ø Bevölkerung in Wahlbezirken",
-    },
-    Median_Population_Size: {
-      ignore: false,
-      weight: 5,
-      label: "Median Bevölkerung in Wahlbezirken",
-    },
-    Standard_Deviation_Population_Size: {
-      ignore: false,
-      weight: 5,
-      label: "Standardabweichung Bevölkerung",
-    },
-  };
-
-  const weightKeys = Object.keys(weights);
+  const weightKeys = Object.keys($weights);
 
   /*----- Backup default weights -----*/
   weightKeys.forEach((key) => {
-    if ("weight" in weights[key]) {
-      weights[key]["weight_backup"] = weights[key].weight;
+    if ("weight" in $weights[key] && !("weight_backup" in $weights[key])) {
+      $weights[key]["weight_backup"] = $weights[key].weight;
     }
-    weights[key]["current_value"] = 0;
+    $weights[key]["current_value"] = 0;
   });
 
   let graphWidth;
@@ -125,9 +64,9 @@
         let distanceSum = 0;
         if (ddi !== di) {
           weightKeys.forEach((key) => {
-            if (!weights[key].ignore) {
+            if (!$weights[key].ignore) {
               distanceSum +=
-                Math.abs(d[key + "_n"] - dd[key + "_n"]) * weights[key].weight;
+                Math.abs(d[key + "_n"] - dd[key + "_n"]) * $weights[key].weight;
             }
           });
         }
@@ -152,15 +91,15 @@
 
         /*----- Normalize columns -----*/
         weightKeys.forEach((key) => {
-          if (!weights[key].ignore) {
+          if (!$weights[key].ignore) {
             newData.forEach((d, i) => {
               d[key] = parseFloat(d[key].toString());
             });
-            weights[key].min = min(newData, (d) => parseFloat(d[key].toString()));
-            weights[key].max = max(newData, (d) => parseFloat(d[key].toString()));
+            $weights[key].min = min(newData, (d) => parseFloat(d[key].toString()));
+            $weights[key].max = max(newData, (d) => parseFloat(d[key].toString()));
             newData.forEach((d) => {
               d[key + "_n"] =
-                (parseFloat(d[key].toString()) - weights[key].min) / (weights[key].max - weights[key].min);
+                (parseFloat(d[key].toString()) - $weights[key].min) / ($weights[key].max - $weights[key].min);
             });
           }
         });
@@ -184,7 +123,7 @@
 
   const setPoint = (values, i) => {
     weightKeys.forEach((key) => {
-      weights[key].current_value = values[key];
+      $weights[key].current_value = values[key];
     });
     showPoint = true;
 
@@ -272,9 +211,9 @@
   <div id="graphs">
     <ul id="dimensions">
       {#each weightKeys as key}
-      {#if !weights[key].ignore}
+      {#if !$weights[key].ignore}
       <li>
-      <MdsGraph on:setKey={setKey} on:updateMds={updateMds} bind:showPoint={showPoint} bind:key={key} bind:dimension={weights[key]} />
+      <MdsGraph on:setKey={setKey} on:updateMds={updateMds} bind:showPoint={showPoint} bind:key={key} bind:dimension={$weights[key]} />
       </li>
       {/if}
       {/each}
