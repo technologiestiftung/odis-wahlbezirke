@@ -130,6 +130,16 @@
       }
     });
 
+    map.addLayer({
+      'id': 'block-outline',
+      'type': 'line',
+      'source': 'blocks',
+      'layout': {},
+      'paint': {
+        'line-color': 'rgba(0,0,0,0)'
+      }
+    });
+
     // map.fitBounds($extent, {
     //   padding: 20
     // });

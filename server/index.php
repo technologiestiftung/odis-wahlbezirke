@@ -23,8 +23,8 @@
 
   } elseif ($_GET['action'] == 'save') {
 
-    $count = 0;
-    $result = $connection->query("SELECT COUNT(*) FROM variations");
+    $count = 500;
+    $results = $connection->query("SELECT COUNT(*) FROM variations");
     while ($row = $results->fetchArray()) {
       $count = intval($row[0]);
     }
@@ -32,10 +32,12 @@
     // To protect the server against again fraud we stop saving after receiving 500 models
     if ($count < 500) {
       $uuid = uniqid();
-      
-      $stmt = $db->prepare('INSERT INTO variations (name, filename) VALUES (:name, :filename)');
-      $stmt->bindValue(':name', $_POST['name'], SQLITE3_STRING);
-      $stmt->bindValue(':filename', $uuid.'.json', SQLITE3_STRING);
+
+      $stmt = $connection->prepare('INSERT INTO variations (name, filename) VALUES (:name, :filename)');
+
+      $stmt->bindValue(':name', $_POST['name'], SQLITE3_TEXT);
+      $stmt->bindValue(':filename', $uuid.'.json', SQLITE3_TEXT);
+
       $result = $stmt->execute();
 
       $json = array();

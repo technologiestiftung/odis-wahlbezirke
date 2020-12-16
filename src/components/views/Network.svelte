@@ -197,7 +197,7 @@
       Für die Optimierung der Wahlbezirke muss festgelegt werden, welche Blöcke benachbart sind. Dies lässt sich leider nicht komplett automatisch durchführen. Die Linien zeigen auf welche Bezirke benachbart sind.<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Um eine Verbindung zu löschen, einfach auf die Linie klicken. Um eine neue Verbindung zu erstellen, zwei Blöcke nacheinander anklicken. Anschließend kann das aktualisierte GeoJSON heruntergeladen werden.<br /><br />
-      <button on:click={downloadGeoJson}>Save GeoJSON</button>
+      <button on:click={downloadGeoJson}>GeoJSON herunterladen</button>
     </p>
   </div>
   <Map bind:map bind:mapReady />

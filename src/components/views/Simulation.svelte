@@ -19,9 +19,15 @@
       0.7,
       0.2
     ]);
-    
 
-   setupSimulation()
+    map.setPaintProperty('block-outline', 'line-color', [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        'rgba(46, 145, 210, 1)',
+        'rgba(0,0,0,0)'
+    ]);
+    
+    setupSimulation()
   }
 
   const setupSimulation = () => {
@@ -143,6 +149,24 @@
     }
   };
 
+  const hoverDistrict = (id) => {
+      $simulationDistricts[$districtMap[id]].blocks.forEach((block) => {
+          map.setFeatureState(
+              { source: 'blocks', id: $simulationBlocks.features[$blockMap[block]].id },
+              { hover: true }
+          );
+      });
+  };
+
+  const resetHover = () => {
+      $simulationBlocks.features.forEach((feature) => {
+          map.setFeatureState(
+              { source: 'blocks', id: feature.id },
+              { hover: false }
+          );
+      });
+  };
+
   let graphHeight;
   let graphWidth;
   const margin = { left: 50, top:5, right:5, bottom:5};
@@ -189,7 +213,7 @@
     <ul class="list over">
       {#each $simulationDistricts as district, i}
       {#if district.population > 2500}
-      <li style="background-color:{setBackground(district)};" title="{district.uwb}: {district.population}">{district.uwb}: {district.population}</li>
+      <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.uwb}: {district.population}">{district.uwb}: {district.population}</li>
       {/if}
       {/each}
     </ul>
