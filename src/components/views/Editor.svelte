@@ -39,7 +39,7 @@ import { feature } from '@turf/turf';
 
             map.on('click', 'blocks', (e) => {
                 e.originalEvent.cancelBubble = true;
-                const id = e.features[0].properties.blknr_copy;
+                const id = e.features[0].properties[__global.env.KEY_ID];
                 selectBlock(id, map);
             });
 
@@ -97,7 +97,7 @@ import { feature } from '@turf/turf';
 
     const selectBlock = (id, source) => {
         if (id !== selectedBlock) {
-            switchBlock = $editorBlocks.features[$blockMap[id]].properties.UWB;
+            switchBlock = $editorBlocks.features[$blockMap[id]].properties[__global.env.KEY_DISTRICT];
             selectedBlockObj = $editorBlocks.features[$blockMap[id]];
             selectedBlock = id;
         } else if (source === 'map'){
@@ -117,7 +117,7 @@ import { feature } from '@turf/turf';
                         'selected': true
                     }
                 );
-            } else if(selectedBlock && feature.properties.UWB === selectedBlockObj.properties.UWB) {
+            } else if(selectedBlock && feature.properties[__global.env.KEY_DISTRICT] === selectedBlockObj.properties[__global.env.KEY_DISTRICT]) {
                 map.setFeatureState(
                     { source: 'blocks', id: feature.id },
                     {
@@ -178,7 +178,7 @@ import { feature } from '@turf/turf';
                     .then((data) => {
 
                         $editorBlocks.features.forEach((feature) => {
-                            feature.properties.UWB = data[feature.properties.blknr_copy];
+                            feature.properties[__global.env.KEY_DISTRICT] = data[feature.properties[__global.env.KEY_ID]];
                         });
 
                         districtsFromBlocks();
@@ -202,18 +202,18 @@ import { feature } from '@turf/turf';
         });
 
         $editorBlocks.features.forEach((feature) => {
-            const uwb = feature.properties.UWB;
+            const district = feature.properties[__global.env.KEY_DISTRICT];
 
-            $editorDistricts[$districtMap[uwb]].population += feature.properties["Insgesamt"];
-            $editorDistricts[$districtMap[uwb]].num_blocks += 1;
-            $editorDistricts[$districtMap[uwb]].blocks.push(feature.properties.blknr_copy);
-            $editorDistricts[$districtMap[uwb]].points = $editorDistricts[$districtMap[uwb]].points.concat(feature.geometry.coordinates[0]);
+            $editorDistricts[$districtMap[district]].population += feature.properties[__global.env.KEY_POPULATION];
+            $editorDistricts[$districtMap[district]].num_blocks += 1;
+            $editorDistricts[$districtMap[district]].blocks.push(feature.properties[__global.env.KEY_ID]);
+            $editorDistricts[$districtMap[district]].points = $editorDistricts[$districtMap[district]].points.concat(feature.geometry.coordinates[0]);
         });
 
         $editorBlocks.features.forEach((feature) => {
-            const uwb = feature.properties.UWB;
-            feature.properties.districtPopulation = $editorDistricts[$districtMap[uwb]].population;
-            feature.properties.color = $editorDistricts[$districtMap[uwb]].color;
+            const district = feature.properties[__global.env.KEY_DISTRICT];
+            feature.properties.districtPopulation = $editorDistricts[$districtMap[district]].population;
+            feature.properties.color = $editorDistricts[$districtMap[district]].color;
         });
 
         updateEditor();
@@ -269,7 +269,7 @@ import { feature } from '@turf/turf';
 
             const formBlocks = [];
             $editorBlocks.features.forEach((feature) => {
-                formBlocks.push(`${feature.properties.blknr_copy}:${feature.properties.UWB}`);
+                formBlocks.push(`${feature.properties[__global.env.KEY_ID]}:${feature.properties[__global.env.KEY_DISTRICT]}`);
             });
 
             formData.append('blocks', formBlocks.join(';'));
@@ -291,9 +291,9 @@ import { feature } from '@turf/turf';
     };
 
     const changeBlock = () => {
-        if (switchBlock !==  selectedBlockObj.properties.UWB) {
+        if (switchBlock !==  selectedBlockObj.properties[__global.env.KEY_DISTRICT]) {
             modified = true;
-            $editorBlocks.features[$blockMap[selectedBlock]].properties.UWB = switchBlock;
+            $editorBlocks.features[$blockMap[selectedBlock]].properties[__global.env.KEY_DISTRICT] = switchBlock;
 
             // TODO: derive neighbors from neighbor_blocks
 
@@ -311,6 +311,11 @@ import { feature } from '@turf/turf';
         dlAnchorElem.click();
         dlAnchorElem.remove();
     };
+
+    const blockId = __global.env.KEY_ID;
+    const districtId = __global.env.KEY_DISTRICT;
+    const populationId = __global.env.KEY_POPULATION;
+    const neighborId = __global.env.KEY_NEIGHBORS;
 
 </script>
 
@@ -348,7 +353,7 @@ import { feature } from '@turf/turf';
         <ul class="list over">
             {#each $editorDistricts as district, i}
             {#if district.population > 2500}
-            <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.uwb}: {district.population}">{district.uwb}: {district.population}</li>
+            <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.id}: {district.population}">{district.id}: {district.population}</li>
             {/if}
             {/each}
         </ul>
@@ -369,9 +374,9 @@ import { feature } from '@turf/turf';
             </svg>
         </div>
         {#if selectedBlock}
-        <h3>Block-Informationen ({selectedBlockObj.properties.blknr_copy})</h3>
+        <h3>Block-Informationen ({selectedBlockObj.properties[blockId]})</h3>
         <div id="block-details">
-            <p>Zugehöriger Wahlbezirk: {selectedBlockObj.properties.UWB}</p>
+            <p>Zugehöriger Wahlbezirk: {selectedBlockObj.properties[districtId]}</p>
             <h4>Einwohner:</h4>
             <table>
                 <thead>
@@ -383,9 +388,9 @@ import { feature } from '@turf/turf';
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{selectedBlockObj.properties.Insgesamt}</td>
-                        <td>{$editorDistricts[$districtMap[selectedBlockObj.properties.UWB]].population}</td>
-                        <td>{$editorDistricts[$districtMap[selectedBlockObj.properties.UWB]].population - selectedBlockObj.properties.Insgesamt}</td>
+                        <td>{selectedBlockObj.properties[populationId]}</td>
+                        <td>{$editorDistricts[$districtMap[selectedBlockObj.properties[districtId]]].population}</td>
+                        <td>{$editorDistricts[$districtMap[selectedBlockObj.properties[districtId]]].population - selectedBlockObj.properties[populationId]}</td>
                     </tr>
                 </tbody>
             </table>
@@ -400,22 +405,22 @@ import { feature } from '@turf/turf';
                     </tr>
                 </thead>
                 <tbody>
-                    {#each selectedBlockObj.properties.neighbors as neighbor}
+                    {#each selectedBlockObj.properties[neighborId] as neighbor}
                     <tr on:mouseenter={() => hoverDistrict(neighbor)} on:mouseleave={() => resetHover()}>
                         <!-- TODO: something about group binding does not work with initial value... -->
                         <td><input checked={(switchBlock === neighbor) ? true : false} bind:group={switchBlock} value="{neighbor.toString()}" type="radio"></td>
                         <td>{neighbor}</td>
                         <td>{$editorDistricts[$districtMap[neighbor.toString()]].population}</td>
-                        <td>{(selectedBlockObj.properties.UWB != neighbor) ? $editorDistricts[$districtMap[neighbor.toString()]].population + selectedBlockObj.properties.Insgesamt : ''}</td>
+                        <td>{(selectedBlockObj.properties[districtId] != neighbor) ? $editorDistricts[$districtMap[neighbor.toString()]].population + selectedBlockObj.properties[populationId] : ''}</td>
                     </tr>
                     {/each}
                 </tbody>
             </table>
-            <button class:inactive={(selectedBlockObj.properties.UWB == switchBlock)} on:click={changeBlock}>Änderung anwenden</button>
+            <button class:inactive={(selectedBlockObj.properties[districtId] == switchBlock)} on:click={changeBlock}>Änderung anwenden</button>
             <h4>Weitere Blöcke im Wahlbezirk:</h4>
             <ul id="other-blocks">
-                {#each $editorDistricts[$districtMap[selectedBlockObj.properties.UWB]].blocks as block}
-                <li on:mouseenter={() => hoverBlock(block)} on:mouseleave={() => resetHover()} on:click={() => selectBlock(block, 'list')}>{block} ({$editorBlocks.features[$blockMap[block.toString()]].properties.Insgesamt})</li>
+                {#each $editorDistricts[$districtMap[selectedBlockObj.properties[districtId]]].blocks as block}
+                <li on:mouseenter={() => hoverBlock(block)} on:mouseleave={() => resetHover()} on:click={() => selectBlock(block, 'list')}>{block} ({$editorBlocks.features[$blockMap[block.toString()]].properties[populationId]})</li>
                 {/each}
             </ul>
         </div>

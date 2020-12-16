@@ -18,7 +18,6 @@ export const currentVariationLoaded = writable(false);
 export const stats = writable([]);
 export const states: Writable<{ 
   population: number ,
-  uwb: string,
   id: string,
   num_blocks: number,
   blocks: string[],

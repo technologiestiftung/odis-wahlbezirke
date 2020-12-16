@@ -47,44 +47,44 @@
 
             // Calculate overall population in voting districts based on block sum
             json.features.forEach((feature, fi) => {
-              const uwb = feature.properties.UWB;
+              const district = feature.properties[__global.env.KEY_DISTRICT];
               feature.properties.centroid = centroid(feature).geometry.coordinates;
-              tempBlockMap[feature.properties.blknr_copy] = fi;
+              
+              tempBlockMap[feature.properties[__global.env.KEY_ID]] = fi;
 
-              if (!(uwb in tempDistrictMap)) {
-                tempDistrictMap[uwb] = tempDistricts.length;
+              if (!(district in tempDistrictMap)) {
+                tempDistrictMap[district] = tempDistricts.length;
                 tempDistricts.push({
-                  uwb,
-                  id: uwb,
+                  id: district,
                   population: 0,
                   num_blocks: 0,
                   blocks: [],
                   points: [],
-                  color: district_colors(uwb)
+                  color: district_colors(district)
                 });
               }
               // TODO columns from env
-              tempDistricts[tempDistrictMap[uwb]].population += feature.properties["Insgesamt"];
-              tempDistricts[tempDistrictMap[uwb]].num_blocks += 1;
-              tempDistricts[tempDistrictMap[uwb]].blocks.push(feature.properties.blknr_copy);
-              tempDistricts[tempDistrictMap[uwb]].points = tempDistricts[tempDistrictMap[uwb]].points.concat(feature.geometry.coordinates[0]);
+              tempDistricts[tempDistrictMap[district]].population += feature.properties[__global.env.KEY_POPULATION];
+              tempDistricts[tempDistrictMap[district]].num_blocks += 1;
+              tempDistricts[tempDistrictMap[district]].blocks.push(feature.properties[__global.env.KEY_ID]);
+              tempDistricts[tempDistrictMap[district]].points = tempDistricts[tempDistrictMap[district]].points.concat(feature.geometry.coordinates[0]);
             });
 
             // Assign population of voting district to individual blocks (for vis)
             json.features.forEach((feature, fi) => {
-              const uwb = feature.properties.UWB;
-              feature.properties.districtPopulation = tempDistricts[tempDistrictMap[uwb]].population;
-              feature.properties.color = district_colors(uwb);
+              const district = feature.properties[__global.env.KEY_DISTRICT];
+              feature.properties.districtPopulation = tempDistricts[tempDistrictMap[district]].population;
+              feature.properties.color = district_colors(district);
               feature.id = fi;
               
-              feature.properties.neighbor_blocks.forEach((neighbor) => {
-                const key = [feature.properties.blknr_copy, neighbor].sort().join('-');
+              feature.properties[__global.env.KEY_NEIGHBOR_BLOCKS].forEach((neighbor) => {
+                const key = [feature.properties[__global.env.KEY_ID], neighbor].sort().join('-');
                 if (!tempNeighborMap.includes(key)) {
                   tempNeighbors.features.push({
                     type: 'Feature',
                     id: tempNeighborMap.length,
                     properties: {
-                      ids: [feature.properties.blknr_copy, neighbor]
+                      ids: [feature.properties[__global.env.KEY_ID], neighbor]
                     },
                     geometry: {
                       type: 'LineString',
@@ -158,7 +158,7 @@
         map.getCanvas().style.cursor = 'pointer';
         
         const description = `<div id="mapbox-popup">
-          <p class="headline">ID: ${e.features[0].properties.blknr_copy}</p>
+          <p class="headline">ID: ${e.features[0].properties[__global.env.KEY_ID]}</p>
           <p>Bevölkerung:</p>
           <table>
             <thead>
@@ -169,7 +169,7 @@
             </thead>
             <tbody>
               <tr>
-                <td>${e.features[0].properties.Insgesamt}</td>
+                <td>${e.features[0].properties[__global.env.KEY_POPULATION]}</td>
                 <td>${e.features[0].properties.districtPopulation}</td>
               </tr>
             </tbody>

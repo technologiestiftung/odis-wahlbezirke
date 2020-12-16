@@ -15,7 +15,7 @@
     ]);
     map.setPaintProperty('blocks', 'fill-outline-color', [
       'case',
-      ['>', ['get', 'Insgesamt'], 2500],
+      ['>', ['get', __global.env.KEY_POPULATION], 2500],
       'red',
       'transparent'
     ]);

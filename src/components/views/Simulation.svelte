@@ -58,7 +58,7 @@
 
   const update = () => {
     $simulationBlocks.features.forEach((feature, i) => {
-      feature.properties.districtPopulation = $simulationDistricts[$districtMap[feature.properties.UWB]].population;
+      feature.properties.districtPopulation = $simulationDistricts[$districtMap[feature.properties[__global.env.KEY_DISTRICT]]].population;
     });
     map.getSource('blocks').setData($simulationBlocks);
   };
@@ -88,13 +88,13 @@
             const block_id = district.blocks[ids[i]];
 
             // get neighbor districts
-            const population = $simulationBlocks.features[$blockMap[block_id]].properties["Insgesamt"];
+            const population = $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_POPULATION];
             const neighbor_districts = [
               ...new Set(
-                $simulationBlocks.features[$blockMap[block_id]].properties.neighbor_blocks.filter((d) => {
-                  return $simulationBlocks.features[$blockMap[d]].properties["UWB"] != district.id
+                $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].filter((d) => {
+                  return $simulationBlocks.features[$blockMap[d]].properties[__global.env.KEY_DISTRICT] != district.id
                 })
-                .map((d) => $simulationBlocks.features[$blockMap[d]].properties["UWB"])
+                .map((d) => $simulationBlocks.features[$blockMap[d]].properties[__global.env.KEY_DISTRICT])
               )
             ];
             
@@ -119,7 +119,7 @@
             $simulationDistricts[smallest_damage_id].population += population;
 
             // update block
-            $simulationBlocks.features[$blockMap[block_id]].properties["UWB"] = $simulationDistricts[smallest_damage_id].id;
+            $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_DISTRICT] = $simulationDistricts[smallest_damage_id].id;
             $simulationBlocks.features[$blockMap[block_id]].properties.color = $simulationDistricts[smallest_damage_id].color;
             $simulationBlocks.features[$blockMap[block_id]].properties.districtPopulation = $simulationDistricts[smallest_damage_id].population;
 
@@ -205,7 +205,7 @@
     <ul class="list ok">
       {#each $simulationDistricts as district, i}
       {#if district.population <= 2500}
-      <li style="background-color:{setBackground(district)};" title="{district.uwb}: {district.population}"></li>
+      <li style="background-color:{setBackground(district)};" title="{district.id}: {district.population}"></li>
       {/if}
       {/each}
     </ul>
@@ -213,7 +213,7 @@
     <ul class="list over">
       {#each $simulationDistricts as district, i}
       {#if district.population > 2500}
-      <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.uwb}: {district.population}">{district.uwb}: {district.population}</li>
+      <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.id}: {district.population}">{district.id}: {district.population}</li>
       {/if}
       {/each}
     </ul>

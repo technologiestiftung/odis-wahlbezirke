@@ -131,12 +131,12 @@
           { selected: true }
         );
       } else if (e.features[0].id !== lastBlock.id) {
-        if (!($neighborMap.includes([e.features[0].properties.blknr_copy, lastBlock.properties.blknr_copy].sort().join('-')))) {
+        if (!($neighborMap.includes([e.features[0].properties[__global.env.KEY_ID], lastBlock.properties[__global.env.KEY_ID]].sort().join('-')))) {
           $neighbors.features.push({
             type: 'Feature',
             id: $neighbors.features.length,
             properties: {
-              ids: [e.features[0].properties.blknr_copy, lastBlock.properties.blknr_copy].sort()
+              ids: [e.features[0].properties[__global.env.KEY_ID], lastBlock.properties[__global.env.KEY_ID]].sort()
             },
             geometry: {
               type: 'LineString',
@@ -146,7 +146,7 @@
               ]
             }
           });
-          $neighborMap.push([e.features[0].properties.blknr_copy, lastBlock.properties.blknr_copy].sort().join('-'))
+          $neighborMap.push([e.features[0].properties[__global.env.KEY_ID], lastBlock.properties[__global.env.KEY_ID]].sort().join('-'))
           map.getSource('network').setData($neighbors);
           updateBlocksFromNeighbors();
         }
@@ -162,18 +162,18 @@
 
   const updateBlocksFromNeighbors = () => {
     $blocks.features.forEach((feature) => {
-      feature.properties.neighbor_blocks = [];
-      feature.properties.neighbors = [];
+      feature.properties[__global.env.KEY_NEIGHBOR_BLOCKS] = [];
+      feature.properties[__global.env.KEY_NEIGHBORS] = [];
     });
 
     $neighbors.features.forEach((feature) => {
       feature.properties.ids.forEach((id, i) => {
         const otherId = (i === 0) ? feature.properties.ids[1] : feature.properties.ids[0];
-        $blocks.features[$blockMap[id]].properties.neighbor_blocks.push(otherId);
+        $blocks.features[$blockMap[id]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].push(otherId);
 
-        const uwb = $blocks.features[$blockMap[otherId]].properties.UWB;
-        if (!($blocks.features[$blockMap[id]].properties.neighbors.includes(uwb))) {
-          $blocks.features[$blockMap[id]].properties.neighbors.push(uwb);
+        const district = $blocks.features[$blockMap[otherId]].properties[__global.env.KEY_DISTRICT];
+        if (!($blocks.features[$blockMap[id]].properties[__global.env.KEY_NEIGHBORS].includes(district))) {
+          $blocks.features[$blockMap[id]].properties[__global.env.KEY_NEIGHBORS].push(district);
         }
       });
     });

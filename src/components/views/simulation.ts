@@ -17,12 +17,12 @@ export const shuffledList = (count: number): number[] => {
 
 export const isCandidate = (data, node_map, districts, district_map, block_id, district_id) => {
   const block = data.features[node_map[block_id]];
-  if (block.properties.neighbor_blocks.length > 0) {
+  if (block.properties[__global.env.KEY_NEIGHBOR_BLOCKS].length > 0) {
     // check if this node has other neighboring districts
-    const neighbors = block.properties.neighbor_blocks;
+    const neighbors = block.properties[__global.env.KEY_NEIGHBOR_BLOCKS];
     let has_other_neighbors = false;
     neighbors.forEach((neighbor) => {
-      if (data.features[node_map[neighbor]].properties["UWB"] !== district_id) {
+      if (data.features[node_map[neighbor]].properties[__global.env.KEY_DISTRICT] !== district_id) {
         has_other_neighbors = true;
       }
     });
@@ -30,11 +30,11 @@ export const isCandidate = (data, node_map, districts, district_map, block_id, d
       // check if there are blocks within this district that depend only on this block
       let is_independent = true;
       neighbors.forEach((neighbor) => {
-        if (data.features[node_map[neighbor]].properties["UWB"] === district_id) {
+        if (data.features[node_map[neighbor]].properties[__global.env.KEY_DISTRICT] === district_id) {
           let same_neighbors = 0;
-          const next_neighbors = data.features[node_map[neighbor]].properties.neighbor_blocks;
+          const next_neighbors = data.features[node_map[neighbor]].properties[__global.env.KEY_NEIGHBOR_BLOCKS];
           next_neighbors.forEach((next_neighbor) => {
-            if (next_neighbor != block_id && data.features[node_map[neighbor]].properties["UWB"] === district_id) {
+            if (next_neighbor != block_id && data.features[node_map[neighbor]].properties[__global.env.KEY_DISTRICT] === district_id) {
               same_neighbors += 1;
             }
           });
@@ -66,8 +66,8 @@ const clusterDistrict = (data, node_map, remove_id, district_id, cluster) => {
   while (cluster_size < cluster.length) {
     cluster_size = cluster.length;
     cluster.forEach((block_id) => {
-      data.features[node_map[block_id]].properties.neighbor_blocks.forEach((neighbor) => {
-        if (!cluster.includes(neighbor) && remove_id !== neighbor && data.features[node_map[neighbor]].properties["UWB"] === district_id) {
+      data.features[node_map[block_id]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].forEach((neighbor) => {
+        if (!cluster.includes(neighbor) && remove_id !== neighbor && data.features[node_map[neighbor]].properties[__global.env.KEY_DISTRICT] === district_id) {
           cluster.push(neighbor);
         }
       });
