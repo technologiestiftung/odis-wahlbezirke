@@ -164,8 +164,7 @@ import { feature } from '@turf/turf';
         });
     };
 
-    // TODO: See simulation
-    const problems = ["07608", "07609", "07614", "07613"];
+    const problems = __global.env.IGNORE_DISTRICTS.split(",");
 
     const setupEditor = () => {
         if (!$currentVariationLoaded) {

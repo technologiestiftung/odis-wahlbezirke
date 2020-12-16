@@ -63,9 +63,7 @@
     map.getSource('blocks').setData($simulationBlocks);
   };
 
-  // TODO: These are problematic districts which are excluded for now
-  // TODO: Move problems to store
-  const problems = ["07608", "07609", "07614", "07613"];
+  const problems = __global.env.IGNORE_DISTRICTS.split(",");
 
   const optimization = () => {
     let changes = 0;
@@ -200,7 +198,6 @@
   </div>
   <Map bind:map bind:mapReady />
   <div id="simulation">
-    <!-- TODO: hover highlight between list and map -->
     <h3>Wahlbezirke die Kriterium erfüllen</h3>
     <ul class="list ok">
       {#each $simulationDistricts as district, i}
