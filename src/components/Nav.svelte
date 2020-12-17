@@ -11,7 +11,8 @@
       { page: 'Varianten erstellen',   icon: 'simulation', component: Simulation },
       { page: 'Vergleichen & Auswählen',          icon: 'mds',        component: Mds },
       { page: 'Editor',       icon: 'editor',     component: Editor },
-  ];
+  ].filter((option) => {
+    return (__global.env.SHOW_NETWORK.toLowerCase() === 'false' && option.icon === 'network') ? false : true;
+  });
 
-  // TODO: based on env var remove network
-  </script>
+</script>

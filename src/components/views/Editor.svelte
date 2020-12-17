@@ -164,8 +164,7 @@ import { feature } from '@turf/turf';
         });
     };
 
-    // TODO: See simulation
-    const problems = ["07608", "07609", "07614", "07613"];
+    const problems = __global.env.IGNORE_DISTRICTS.split(",");
 
     const setupEditor = () => {
         if (!$currentVariationLoaded) {
@@ -234,8 +233,6 @@ import { feature } from '@turf/turf';
         }
     }
 
-    // TODO: Download geojson/csv
-
     const setBackground = (district) => {
         if ((district.num_blocks === 1 && district.population > 2500) || problems.includes(district.id)) {
             return 'rgb(150,150,150)';
@@ -295,7 +292,22 @@ import { feature } from '@turf/turf';
             modified = true;
             $editorBlocks.features[$blockMap[selectedBlock]].properties[__global.env.KEY_DISTRICT] = switchBlock;
 
-            // TODO: derive neighbors from neighbor_blocks
+            const neighbors = [];
+            $editorBlocks.features[$blockMap[selectedBlock]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].forEach((block) => {
+                const neighborDistrict = $editorBlocks.features[$blockMap[block]].properties[__global.env.KEY_DISTRICT];
+                if (neighbors.indexOf(neighborDistrict) === -1) {
+                    neighbors.push(neighborDistrict);
+                }
+                const neighborsNeighbor = [];
+                $editorBlocks.features[$blockMap[block]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].forEach((neighborBlock) => {
+                    const neighborNeighborDistrict = $editorBlocks.features[$blockMap[neighborBlock]].properties[__global.env.KEY_DISTRICT];
+                    if (neighborsNeighbor.indexOf(neighborNeighborDistrict) === -1) {
+                        neighborsNeighbor.push(neighborNeighborDistrict);
+                    }
+                });
+                $editorBlocks.features[$blockMap[block]].properties[__global.env.KEY_NEIGHBORS] = neighborsNeighbor;
+            });
+            $editorBlocks.features[$blockMap[selectedBlock]].properties[__global.env.KEY_NEIGHBORS] = neighbors;
 
             selectedBlockObj = $editorBlocks.features[$blockMap[selectedBlock]];
             districtsFromBlocks();

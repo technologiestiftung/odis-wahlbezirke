@@ -11,6 +11,8 @@ declare global {
       KEY_ID: string;
       KEY_NEIGHBORS: string;
       KEY_NEIGHBOR_BLOCKS: string;
+      SHOW_NETWORK: string;
+      IGNORE_DISTRICTS: string;
     }
   };
 }

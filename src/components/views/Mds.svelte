@@ -52,7 +52,9 @@
   let mounted = false;
   onMount(() => {
 		mounted = true;
-	});
+  });
+  
+  // TODO: Merge current version + simulation version (states.length > )
 
   // share updateMds with children to run when change occurs
   const updateMds = () => {
