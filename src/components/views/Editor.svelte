@@ -32,7 +32,7 @@ import { feature } from '@turf/turf';
             
             map.setPaintProperty('blocks', 'fill-opacity', [
                 'case',
-                ['>', ['get', 'districtPopulation'], 2500],
+                ['>', ['get', 'districtPopulation'], __global.env.LIMIT],
                 0.7,
                 0.2
             ]);
@@ -224,7 +224,7 @@ import { feature } from '@turf/turf';
     };
 
     const updateEditor = () => {
-        list_color.domain([2500, max($editorDistricts, (d) => d.population)]);
+        list_color.domain([__global.env.LIMIT, max($editorDistricts, (d) => d.population)]);
         map.getSource('blocks').setData($editorBlocks);
     };
 
@@ -239,9 +239,9 @@ import { feature } from '@turf/turf';
     }
 
     const setBackground = (district) => {
-        if ((district.num_blocks === 1 && district.population > 2500) || problems.includes(district.id)) {
+        if ((district.num_blocks === 1 && district.population > __global.env.LIMIT) || problems.includes(district.id)) {
             return 'rgb(150,150,150)';
-        } else if (district.population > 2500) {
+        } else if (district.population > __global.env.LIMIT) {
             return list_color(district.population);
         } else {
             return 'white';
@@ -334,6 +334,8 @@ import { feature } from '@turf/turf';
     const populationId = __global.env.KEY_POPULATION;
     const neighborId = __global.env.KEY_NEIGHBORS;
 
+    const limit = __global.env.LIMIT;
+
 </script>
 
 <div id="viewContainer" class="editor">
@@ -370,7 +372,7 @@ import { feature } from '@turf/turf';
         <h3>Noch zu optimierende Wahlbezirke</h3>
         <ul class="list over">
             {#each $editorDistricts as district, i}
-            {#if district.population > 2500}
+            {#if district.population > limit}
             <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.id}: {district.population}">{district.id}: {district.population}</li>
             {/if}
             {/each}
@@ -379,15 +381,15 @@ import { feature } from '@turf/turf';
             <svg>
                 <g class="legend" transform="translate({statsMargin.left} {statsMargin.top})">
                     <rect style="fill:#2e91d2;" width="20" height="20" />
-                    <text text-anchor="start" x="25" y="14">&lt;= 2500 ({$editorDistricts.filter((d) => d.population <= 2500).length})</text>
+                    <text text-anchor="start" x="25" y="14">&lt;= {limit} ({$editorDistricts.filter((d) => d.population <= {limit}).length})</text>
                 </g>
                 <g class="legend" transform="translate({statsWidth - statsMargin.right} {statsMargin.top})">
-                    <text text-anchor="end" x="-25" y="14">&gt; 2500 ({$editorDistricts.filter((d) => d.population > 2500).length})</text>
+                    <text text-anchor="end" x="-25" y="14">&gt; {limit} ({$editorDistricts.filter((d) => d.population > {limit}).length})</text>
                     <rect style="fill:#E60032;" width="20" height="20" x="-20" />
                 </g>
                 <g transform="translate({statsMargin.left} {statsMargin.top + 30})">
-                    <rect style="fill:#2e91d2;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= 2500).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
-                    <rect x="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= 2500).length}" style="fill:#E60032;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population > 2500).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
+                    <rect style="fill:#2e91d2;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= limit).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
+                    <rect x="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= limit).length}" style="fill:#E60032;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population > limit).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
                 </g>
             </svg>
         </div>

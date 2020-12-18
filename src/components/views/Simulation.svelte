@@ -15,7 +15,7 @@
     map.setPaintProperty('blocks', 'fill-color', ['get', 'color']);
     map.setPaintProperty('blocks', 'fill-opacity', [
       'case',
-      ['>', ['get', 'districtPopulation'], 2500],
+      ['>', ['get', 'districtPopulation'], __global.env.LIMIT],
       0.7,
       0.2
     ]);
@@ -34,7 +34,7 @@
     $states = [];
     $simulationBlocks = JSON.parse(JSON.stringify($blocks));
     $simulationDistricts = JSON.parse(JSON.stringify($districts));
-    list_color.domain([2500, max($simulationDistricts, (d) => d.population)])
+    list_color.domain([__global.env.LIMIT, max($simulationDistricts, (d) => d.population)])
   };
 
   const start = () => {
@@ -68,7 +68,7 @@
   const optimization = () => {
     let changes = 0;
     $simulationDistricts.forEach((district) => {
-      if (district.population > 2500 && !problems.includes(district.id)) {
+      if (district.population > __global.env.LIMIT && !problems.includes(district.id)) {
         let selected = false;
         let ids = shuffledList(district.blocks.length);
         for (let i = 0; i < ids.length && !selected; i += 1) {
@@ -105,7 +105,7 @@
             let smallest_damage = Number.MAX_VALUE;
             let smallest_damage_id = null;
             neighbor_districts.forEach((neighbor: number) => {
-              const damage = $simulationDistricts[$districtMap[neighbor]].population + population - 2500;
+              const damage = $simulationDistricts[$districtMap[neighbor]].population + population - __global.env.LIMIT;
               if (damage < smallest_damage) {
                 smallest_damage = damage;
                 smallest_damage_id = $districtMap[neighbor];
@@ -138,9 +138,9 @@
   };
 
   const setBackground = (district) => {
-    if ((district.num_blocks === 1 && district.population > 2500) || problems.includes(district.id)) {
+    if ((district.num_blocks === 1 && district.population > __global.env.LIMIT) || problems.includes(district.id)) {
       return 'rgb(150,150,150)';
-    } else if (district.population > 2500) {
+    } else if (district.population > __global.env.LIMIT) {
       return list_color(district.population);
     } else {
       return 'white';
@@ -170,7 +170,7 @@
   const margin = { left: 50, top:5, right:5, bottom:5};
 
   $: sX = scaleLinear().range([0, graphWidth - margin.left - margin.right]).domain([0, $states.length - 1]);
-  $: bY = scaleLinear().range([graphHeight - margin.top - margin.bottom, margin.top]).domain([2500, max($simulationDistricts, (d) => d.population)]);
+  $: bY = scaleLinear().range([graphHeight - margin.top - margin.bottom, margin.top]).domain([__global.env.LIMIT, max($simulationDistricts, (d) => d.population)]);
   $: yTicks = bY.ticks(10);
 
   $: stateX = (i, state) => {
@@ -180,6 +180,8 @@
   $: blockY = (block) => {
     return bY(block.population);
   };
+
+  const limit = __global.env.LIMIT;
 </script>
 
 <div id="viewContainer" class="simulation">
@@ -201,7 +203,7 @@
     <h3>Wahlbezirke die Kriterium erfüllen</h3>
     <ul class="list ok">
       {#each $simulationDistricts as district, i}
-      {#if district.population <= 2500}
+      {#if district.population <= limit}
       <li style="background-color:{setBackground(district)};" title="{district.id}: {district.population}"></li>
       {/if}
       {/each}
@@ -209,7 +211,7 @@
     <h3>Noch zu optimierende Wahlbezirke</h3>
     <ul class="list over">
       {#each $simulationDistricts as district, i}
-      {#if district.population > 2500}
+      {#if district.population > limit}
       <li on:mouseenter={() => hoverDistrict(district.id)} on:mouseleave={() => resetHover()} style="background-color:{setBackground(district)};" title="{district.id}: {district.population}">{district.id}: {district.population}</li>
       {/if}
       {/each}
@@ -229,7 +231,7 @@
           {#each $states as state, i}
           <g transform="translate({stateX(i, state)} 0)">
             {#each state as block}
-            {#if block.population > 2500}
+            {#if block.population > limit}
             <circle 
               cx="0"
               cy="{blockY(block)}"

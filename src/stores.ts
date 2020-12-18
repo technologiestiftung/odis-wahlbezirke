@@ -77,7 +77,7 @@ export const weights = writable({
   Number_of_Overpopulated_Districts: {
     ignore: false,
     weight: 5,
-    label: "Anzahl Wahlbezirke über 2500 Ew.",
+    label: "Anzahl Wahlbezirke über " + __global.env.LIMIT + " Ew.",
   },
   Average_Population_Size: {
     ignore: false,
