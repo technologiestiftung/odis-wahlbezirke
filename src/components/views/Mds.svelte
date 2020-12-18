@@ -1,10 +1,11 @@
 <script lang="ts">
-  import {stats, weights} from '../../stores';
+  import {blocks, districts, simulationBlocks, simulationDistricts, stats, weights, joinedStats} from '../../stores';
   import MdsGraph from './MdsGraph.svelte';
   import {csv, min, max, scaleLinear, extent, scaleSqrt, interpolateViridis, scaleSequentialSqrt} from 'd3';
   import {transpose} from 'numeric';
   import {mds} from './mds';
   import { onMount } from 'svelte';
+  import { rank } from '../../libs/ranking';
 
   const weightKeys = Object.keys($weights);
 
@@ -34,12 +35,11 @@
     if (radiusKey === null) {
       radius.range([5,5]).domain([1,1]);
     } else {
-      radius.range([1,8]).domain(extent($stats, (d) => d[radiusKey]))
+      radius.range([1,8]).domain(extent($joinedStats, (d) => d[radiusKey]))
     }
   };
 
   let distMatrix = [];
-  let distMax = 0;
   let twoDimensions: number[][] = [[0,1],[0,1]];
 
   const gradientCount = 50;
@@ -54,15 +54,13 @@
 		mounted = true;
   });
   
-  // TODO: Merge current version + simulation version (states.length > )
-
   // share updateMds with children to run when change occurs
   const updateMds = () => {
     /*----- Calculate distance matrix -----*/
     distMatrix = [];
-    $stats.forEach((d, di) => {
+    $joinedStats.forEach((d, di) => {
       const row = [];
-      $stats.forEach((dd, ddi) => {
+      $joinedStats.forEach((dd, ddi) => {
         let distanceSum = 0;
         if (ddi !== di) {
           weightKeys.forEach((key) => {
@@ -77,8 +75,6 @@
       distMatrix.push(row);
     });
 
-    distMax = max<[number, number], number>(distMatrix, (d) => max(d));
-
     /*----- Dimensionality reduction -----*/
     twoDimensions = transpose(mds(distMatrix, 2));
   };
@@ -86,29 +82,50 @@
   $: x = scaleLinear().range([0, graphWidth - 2 * margin]).domain(<[number, number]>extent(twoDimensions[0]));
   $: y = scaleLinear().range([0, graphHeight - 2 * margin - miniGraphHeight]).domain(<[number, number]>extent(twoDimensions[1]));
 
+  const normalizeRank = (ranks) => {
+    weightKeys.forEach((key) => {
+      if (!$weights[key].ignore) {
+        ranks[key + "_n"] =
+          (ranks[key] - $weights[key].min) / ($weights[key].max - $weights[key].min);
+      }
+    });
+    return ranks;
+  };
+
   if ($stats.length === 0) {
     csv('/assets/data/selected_sim_stats.csv')
       .then((data) => {
-        const newData: { [key: string] : (number | string)}[] = data;
+        const newData: { [key: string] : number}[] = new Array(data.length);
 
         /*----- Normalize columns -----*/
         weightKeys.forEach((key) => {
           if (!$weights[key].ignore) {
-            newData.forEach((d, i) => {
-              d[key] = parseFloat(d[key].toString());
+            data.forEach((d, i) => {
+              if (!newData[i]) { newData[i] = {}; }
+              newData[i][key] = parseFloat(d[key].toString());
             });
-            $weights[key].min = min(newData, (d) => parseFloat(d[key].toString()));
-            $weights[key].max = max(newData, (d) => parseFloat(d[key].toString()));
-            newData.forEach((d) => {
-              d[key + "_n"] =
-                (parseFloat(d[key].toString()) - $weights[key].min) / ($weights[key].max - $weights[key].min);
+            $weights[key].min = min(newData, (d) => d[key]);
+            $weights[key].max = max(newData, (d) => d[key]);
+            newData.forEach((d, i) => {
+              newData[i][key + "_n"] =
+                (d[key] - $weights[key].min) / ($weights[key].max - $weights[key].min);
             });
           }
         });
         $stats = newData;
+        $joinedStats = [
+          ...$stats, 
+          ...($blocks.features.length > 0) ? [normalizeRank(rank('0', 'Aktuelle Situation', $blocks, $blocks, $districts))] : [],
+          ...($simulationBlocks.features.length > 0) ? [normalizeRank(rank('1', 'Simulation', $simulationBlocks, $blocks, $simulationDistricts))] : []
+        ];
         updateMds();
       });
   } else {
+    $joinedStats = [
+      ...$stats, 
+      ...($blocks.features.length > 0) ? [normalizeRank(rank('0', 'Aktuelle Situation', $blocks, $blocks, $districts))] : [],
+      ...($simulationBlocks.features.length > 0) ? [normalizeRank(rank('1', 'Simulation', $simulationBlocks, $blocks, $simulationDistricts))] : []
+    ];
     updateMds();
   }
 
@@ -178,14 +195,28 @@
           {/each}
         </g>
         <g>
-          {#each $stats as stat, i}
-          <circle
-            fill={(showPointId) ? scatterColor(distMatrix[showPointId][i]) : 'black'}
+          {#each $joinedStats as stat, i}
+          <g
             on:mouseenter={() => setPoint(stat, i)}
             on:mouseleave={hidePoint}
-            r="{radius((radiusKey) ? stat[radiusKey] : 1)}"
-            cx="{x(twoDimensions[0][i])}"
-            cy="{y(twoDimensions[1][i])}" />
+            style="fill:{(showPointId) ? scatterColor(distMatrix[showPointId][i]) : 'black'};"
+            transform="translate({x(twoDimensions[0][i])} {y(twoDimensions[1][i])})">
+            {#if stat.ID === '0'}
+              <rect
+                x="{radius((radiusKey) ? stat[radiusKey] : 1)*-1}"
+                y="{radius((radiusKey) ? stat[radiusKey] : 1)*-1}"
+                width="{radius((radiusKey) ? stat[radiusKey] : 1)*2}"
+                height="{radius((radiusKey) ? stat[radiusKey] : 1)*2}" />
+            {:else if stat.ID === '1'}
+              <path d="M0 {radius((radiusKey) ? stat[radiusKey] : 1)*-1}
+                L{radius((radiusKey) ? stat[radiusKey] : 1)*1} 0
+                L0 {radius((radiusKey) ? stat[radiusKey] : 1)*1}
+                L{radius((radiusKey) ? stat[radiusKey] : 1)*-1} 0
+                L0 {radius((radiusKey) ? stat[radiusKey] : 1)*-1}Z" />
+            {:else}
+              <circle r="{radius((radiusKey) ? stat[radiusKey] : 1)}" />
+            {/if}
+          </g>
           {/each}
         </g>
         {#if showPoint}

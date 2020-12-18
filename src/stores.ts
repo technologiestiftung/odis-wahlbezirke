@@ -1,10 +1,10 @@
 import {writable, Writable} from 'svelte/store';
 
 export const extent = writable([]);
-export const blocks = writable({ features: [] });
+export const blocks = writable({ type: "FeatureCollection", features: [] });
 export const blockMap = writable({});
-export const simulationBlocks = writable({ features: [] });
-export const editorBlocks = writable({ features: [] });
+export const simulationBlocks = writable({ type: "FeatureCollection", features: [] });
+export const editorBlocks = writable({ type: "FeatureCollection", features: [] });
 export const districts = writable([]);
 export const districtMap = writable({});
 export const simulationDistricts = writable([]);
@@ -15,7 +15,18 @@ export const variations = writable([]);
 export const variationDefinitions = writable({});
 export const currentVariation = writable(null);
 export const currentVariationLoaded = writable(false);
-export const stats = writable([]);
+export const stats: Writable<{
+  ID: string;
+  X: string;
+}[] & {
+  [key: string]: number;
+}[]> = writable([]);
+export const joinedStats: Writable<{
+  ID: string;
+  X: string;
+}[] & {
+  [key: string]: number;
+}[]> = writable([]);
 export const states: Writable<{ 
   population: number ,
   id: string,

@@ -29,7 +29,7 @@
 
     map.on("load", () => {
 
-      if("type" in $blocks){
+      if($blocks.features.length > 0){
         setupGeoJson();
       } else {
         fetch('/assets/data/blocks.geojson')

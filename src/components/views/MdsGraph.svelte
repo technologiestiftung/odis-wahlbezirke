@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {stats} from '../../stores';
+  import {joinedStats} from '../../stores';
   import {bin, scaleLinear, extent} from 'd3';
   import {onMount, createEventDispatcher} from 'svelte';
 
@@ -19,7 +19,7 @@
   $: graphDWidth = graphWidth - margin.left - margin.right;
   $: graphDHeight = graphHeight - margin.top - margin.bottom;
 
-  $: histogram = bin().value((d) => d[key]).thresholds(15)($stats);
+  $: histogram = bin().value((d) => d[key]).thresholds(15)($joinedStats);
 
   $: x = scaleLinear()
           .range([0, graphDWidth])
@@ -66,7 +66,7 @@
   </div></div>
   <div class="svg-container" bind:clientWidth={graphWidth} bind:clientHeight={graphHeight}>
     <svg>
-      {#if mounted && $stats.length > 0}
+      {#if mounted && $joinedStats.length > 0}
       <g class="bars" transform="translate({margin.left}, {margin.top})">
         {#each histogram as bar}
         {#if bar.length > 0}
