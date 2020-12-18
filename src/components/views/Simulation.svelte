@@ -65,6 +65,7 @@
 
   const problems = __global.env.IGNORE_DISTRICTS.split(",");
 
+  // TODO: Move optimization to lib...
   const optimization = () => {
     let changes = 0;
     $simulationDistricts.forEach((district) => {
