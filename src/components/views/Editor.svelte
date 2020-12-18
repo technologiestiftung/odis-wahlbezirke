@@ -169,9 +169,14 @@ import { feature } from '@turf/turf';
     const setupEditor = () => {
         if (!$currentVariationLoaded) {
             $currentVariationLoaded = true;
-            $editorBlocks = JSON.parse(JSON.stringify($blocks));
-            $editorDistricts = JSON.parse(JSON.stringify($districts));
-            if ($currentVariation !== null && $currentVariation !== 'null') {
+            if ($currentVariation === 'simulation') {
+                $editorBlocks = JSON.parse(JSON.stringify($simulationBlocks));
+                $editorDistricts = JSON.parse(JSON.stringify($simulationDistricts));
+            } else {
+                $editorBlocks = JSON.parse(JSON.stringify($blocks));
+                $editorDistricts = JSON.parse(JSON.stringify($districts));
+            }
+            if ($currentVariation !== null && $currentVariation !== 'null' && $currentVariation !== 'simulation') {
                 fetch(__global.env.SERVER + '/data/' + $currentVariation)
                     .then((result) => result.json())
                     .then((data) => {
@@ -342,9 +347,10 @@ import { feature } from '@turf/turf';
             Anschließend können Sie Ihre Variante für alle zugänglich abspeichern oder sich das Ergebnis als GeoJSON herunterladen.<br /><br />
             <strong style="clear:both; display:block;">Wählen Sie eine andere Variante:</strong>
             <select bind:value={selectedVariation}>
-                <!-- TODO: connect to simulation -->
                 <option value="null">Aktuelle Situation</option>
-                <!--<option value="simulation">Ihre Simulation</option>-->
+                {#if $simulationBlocks.features.length > 0}
+                     <option value="simulation">Simulation</option>
+                {/if}
                 {#each $variations as variation}
                 <option value={variation.filename}>{variation.name}</option>
                 {/each}

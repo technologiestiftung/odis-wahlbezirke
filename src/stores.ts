@@ -16,14 +16,14 @@ export const variationDefinitions = writable({});
 export const currentVariation = writable(null);
 export const currentVariationLoaded = writable(false);
 export const stats: Writable<{
-  ID: string;
-  X: string;
+  ID?: string;
+  X?: string;
 }[] & {
   [key: string]: number;
 }[]> = writable([]);
 export const joinedStats: Writable<{
-  ID: string;
-  X: string;
+  ID?: string;
+  X?: string;
 }[] & {
   [key: string]: number;
 }[]> = writable([]);

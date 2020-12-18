@@ -68,12 +68,7 @@ export const rank = (id: string, name: string, originalGeoJson: votingGeoJson, s
   // up using only a subset for ranking the simulation results
   let bad = 0;
   let errors = [];
-  let error_sum = 0;
-  let error_median = 0;
-  let error_mean = 0;
-  let error_max = 0;
   let good = 0;
-  let quantiles = [];
 
   districts.forEach((district) => {
     if (district.population > parseInt(__global.env.LIMIT) && !__global.env.IGNORE_DISTRICTS.split(',').includes(district.id)) {
@@ -84,11 +79,11 @@ export const rank = (id: string, name: string, originalGeoJson: votingGeoJson, s
     }
   });
 
-  error_sum = sum(errors);
-  error_median = median(errors);
-  error_mean = mean(errors);
-  error_max = max(errors);
-  quantiles = [
+  const error_sum = sum(errors);
+  const error_median = median(errors);
+  const error_mean = mean(errors);
+  const error_max = max(errors);
+  const quantiles = [
     quantile(errors, 0),
     quantile(errors, 0.25),
     quantile(errors, 0.5),

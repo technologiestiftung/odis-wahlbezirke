@@ -54,7 +54,6 @@
 		mounted = true;
   });
   
-  // share updateMds with children to run when change occurs
   const updateMds = () => {
     /*----- Calculate distance matrix -----*/
     distMatrix = [];
@@ -201,13 +200,13 @@
             on:mouseleave={hidePoint}
             style="fill:{(showPointId) ? scatterColor(distMatrix[showPointId][i]) : 'black'};"
             transform="translate({x(twoDimensions[0][i])} {y(twoDimensions[1][i])})">
-            {#if stat.ID === '0'}
+            {#if 'ID' in stat && stat.ID === '0'}
               <rect
                 x="{radius((radiusKey) ? stat[radiusKey] : 1)*-1}"
                 y="{radius((radiusKey) ? stat[radiusKey] : 1)*-1}"
                 width="{radius((radiusKey) ? stat[radiusKey] : 1)*2}"
                 height="{radius((radiusKey) ? stat[radiusKey] : 1)*2}" />
-            {:else if stat.ID === '1'}
+            {:else if 'ID' in stat && stat.ID === '1'}
               <path d="M0 {radius((radiusKey) ? stat[radiusKey] : 1)*-1}
                 L{radius((radiusKey) ? stat[radiusKey] : 1)*1} 0
                 L0 {radius((radiusKey) ? stat[radiusKey] : 1)*1}
