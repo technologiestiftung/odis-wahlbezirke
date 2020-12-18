@@ -19,7 +19,7 @@
   $: graphDWidth = graphWidth - margin.left - margin.right;
   $: graphDHeight = graphHeight - margin.top - margin.bottom;
 
-  $: histogram = bin().value((d) => d[key]).thresholds(15)($joinedStats);
+  $: histogram = bin().thresholds(15)($joinedStats.map((d) => d[key]));
 
   $: x = scaleLinear()
           .range([0, graphDWidth])

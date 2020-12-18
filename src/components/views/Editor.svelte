@@ -32,7 +32,7 @@ import { feature } from '@turf/turf';
             
             map.setPaintProperty('blocks', 'fill-opacity', [
                 'case',
-                ['>', ['get', 'districtPopulation'], __global.env.LIMIT],
+                ['>', ['get', 'districtPopulation'], parseInt(__global.env.LIMIT)],
                 0.7,
                 0.2
             ]);
@@ -224,7 +224,7 @@ import { feature } from '@turf/turf';
     };
 
     const updateEditor = () => {
-        list_color.domain([__global.env.LIMIT, max($editorDistricts, (d) => d.population)]);
+        list_color.domain([parseInt(__global.env.LIMIT), max($editorDistricts, (d) => d.population)]);
         map.getSource('blocks').setData($editorBlocks);
     };
 
@@ -239,9 +239,9 @@ import { feature } from '@turf/turf';
     }
 
     const setBackground = (district) => {
-        if ((district.num_blocks === 1 && district.population > __global.env.LIMIT) || problems.includes(district.id)) {
+        if ((district.num_blocks === 1 && district.population > parseInt(__global.env.LIMIT)) || problems.includes(district.id)) {
             return 'rgb(150,150,150)';
-        } else if (district.population > __global.env.LIMIT) {
+        } else if (district.population > parseInt(__global.env.LIMIT)) {
             return list_color(district.population);
         } else {
             return 'white';
@@ -334,7 +334,7 @@ import { feature } from '@turf/turf';
     const populationId = __global.env.KEY_POPULATION;
     const neighborId = __global.env.KEY_NEIGHBORS;
 
-    const limit = __global.env.LIMIT;
+    const limit = parseInt(__global.env.LIMIT);
 
 </script>
 

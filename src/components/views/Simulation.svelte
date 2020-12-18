@@ -15,7 +15,7 @@
     map.setPaintProperty('blocks', 'fill-color', ['get', 'color']);
     map.setPaintProperty('blocks', 'fill-opacity', [
       'case',
-      ['>', ['get', 'districtPopulation'], __global.env.LIMIT],
+      ['>', ['get', 'districtPopulation'], parseInt(__global.env.LIMIT)],
       0.7,
       0.2
     ]);
@@ -34,7 +34,7 @@
     $states = [];
     $simulationBlocks = JSON.parse(JSON.stringify($blocks));
     $simulationDistricts = JSON.parse(JSON.stringify($districts));
-    list_color.domain([__global.env.LIMIT, max($simulationDistricts, (d) => d.population)])
+    list_color.domain([parseInt(__global.env.LIMIT), max($simulationDistricts, (d) => d.population)])
   };
 
   const start = () => {
@@ -68,7 +68,7 @@
   const optimization = () => {
     let changes = 0;
     $simulationDistricts.forEach((district) => {
-      if (district.population > __global.env.LIMIT && !problems.includes(district.id)) {
+      if (district.population > parseInt(__global.env.LIMIT) && !problems.includes(district.id)) {
         let selected = false;
         let ids = shuffledList(district.blocks.length);
         for (let i = 0; i < ids.length && !selected; i += 1) {
@@ -105,7 +105,7 @@
             let smallest_damage = Number.MAX_VALUE;
             let smallest_damage_id = null;
             neighbor_districts.forEach((neighbor: number) => {
-              const damage = $simulationDistricts[$districtMap[neighbor]].population + population - __global.env.LIMIT;
+              const damage = $simulationDistricts[$districtMap[neighbor]].population + population - parseInt(__global.env.LIMIT);
               if (damage < smallest_damage) {
                 smallest_damage = damage;
                 smallest_damage_id = $districtMap[neighbor];
@@ -138,9 +138,9 @@
   };
 
   const setBackground = (district) => {
-    if ((district.num_blocks === 1 && district.population > __global.env.LIMIT) || problems.includes(district.id)) {
+    if ((district.num_blocks === 1 && district.population > parseInt(__global.env.LIMIT)) || problems.includes(district.id)) {
       return 'rgb(150,150,150)';
-    } else if (district.population > __global.env.LIMIT) {
+    } else if (district.population > parseInt(__global.env.LIMIT)) {
       return list_color(district.population);
     } else {
       return 'white';
@@ -181,7 +181,7 @@
     return bY(block.population);
   };
 
-  const limit = __global.env.LIMIT;
+  const limit = parseInt(__global.env.LIMIT);
 </script>
 
 <div id="viewContainer" class="simulation">

@@ -9,20 +9,20 @@
     map.setPaintProperty('blocks', 'fill-color', ['get', 'color']);
     map.setPaintProperty('blocks', 'fill-opacity', [
       'case',
-      ['>', ['get', 'districtPopulation'], __global.env.LIMIT],
+      ['>', ['get', 'districtPopulation'], parseInt(__global.env.LIMIT)],
       0.7,
       0.2
     ]);
     map.setPaintProperty('blocks', 'fill-outline-color', [
       'case',
-      ['>', ['get', __global.env.KEY_POPULATION], __global.env.LIMIT],
+      ['>', ['get', __global.env.KEY_POPULATION], parseInt(__global.env.LIMIT)],
       'red',
       'transparent'
     ]);
     addPopUp();
   }
 
-  const limit = __global.env.LIMIT;
+  const limit = parseInt(__global.env.LIMIT);
 </script>
 
 <div id="viewContainer" class="population">

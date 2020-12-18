@@ -5,7 +5,9 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public",
-    "validate": "svelte-check"
+    "validate": "svelte-check",
+    "network": "ts-node tools/network.ts",
+    "simulation": "ts-node tools/simulation.ts"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^16.0.0",
@@ -28,6 +30,7 @@
     "svelte": "^3.0.0",
     "svelte-check": "^1.0.0",
     "svelte-preprocess": "^4.6.1",
+    "ts-node": "^9.1.1",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3"
   },
