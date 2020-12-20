@@ -1,7 +1,6 @@
 import { sum, median, mean, max, quantile, deviation } from "d3";
 import { area, length, union, polygonToLine, Position } from "@turf/turf";
 
-
 export const rank = (id: string, name: string, originalGeoJson: votingGeoJson, simulationGeoJson: votingGeoJson, districts: votingDistrict): {
   ID: string;
   X: string;

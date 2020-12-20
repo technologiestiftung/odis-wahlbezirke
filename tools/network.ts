@@ -16,7 +16,7 @@ declare global {
     };
 }
 
-import { buffer, intersect, area} from '@turf/turf';
+import { buffer, intersect} from '@turf/turf';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 

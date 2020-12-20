@@ -2,6 +2,8 @@
 
   import { extent, blocks, districts, districtMap, blockMap, neighbors, neighborMap } from "../stores"
 
+  import {parseData} from "../libs/data";
+
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";
   import {scaleOrdinal, schemeCategory10} from 'd3';
@@ -35,77 +37,15 @@
         fetch('/assets/data/blocks.geojson')
           .then((response) => response.json())
           .then((json) => {
-            const tempDistrictMap = {};
-            const tempDistricts = [];
-            const tempBlockMap = {};
+            const parseResults = parseData(json, district_colors);
 
-            const tempNeighbors = {
-              type: 'FeatureCollection',
-              features: [],
-            };
-            const tempNeighborMap = [];
-
-            // Calculate overall population in voting districts based on block sum
-            json.features.forEach((feature, fi) => {
-              const district = feature.properties[__global.env.KEY_DISTRICT];
-              feature.properties.centroid = centroid(feature).geometry.coordinates;
-              
-              tempBlockMap[feature.properties[__global.env.KEY_ID]] = fi;
-
-              if (!(district in tempDistrictMap)) {
-                tempDistrictMap[district] = tempDistricts.length;
-                tempDistricts.push({
-                  id: district,
-                  population: 0,
-                  num_blocks: 0,
-                  blocks: [],
-                  points: [],
-                  color: district_colors(district)
-                });
-              }
-              // TODO columns from env
-              tempDistricts[tempDistrictMap[district]].population += feature.properties[__global.env.KEY_POPULATION];
-              tempDistricts[tempDistrictMap[district]].num_blocks += 1;
-              tempDistricts[tempDistrictMap[district]].blocks.push(feature.properties[__global.env.KEY_ID]);
-              tempDistricts[tempDistrictMap[district]].points = tempDistricts[tempDistrictMap[district]].points.concat(feature.geometry.coordinates[0]);
-            });
-
-            // Assign population of voting district to individual blocks (for vis)
-            json.features.forEach((feature, fi) => {
-              const district = feature.properties[__global.env.KEY_DISTRICT];
-              feature.properties.districtPopulation = tempDistricts[tempDistrictMap[district]].population;
-              feature.properties.color = district_colors(district);
-              feature.id = fi;
-              
-              feature.properties[__global.env.KEY_NEIGHBOR_BLOCKS].forEach((neighbor) => {
-                const key = [feature.properties[__global.env.KEY_ID], neighbor].sort().join('-');
-                if (!tempNeighborMap.includes(key)) {
-                  tempNeighbors.features.push({
-                    type: 'Feature',
-                    id: tempNeighborMap.length,
-                    properties: {
-                      ids: [feature.properties[__global.env.KEY_ID], neighbor]
-                    },
-                    geometry: {
-                      type: 'LineString',
-                      coordinates: [
-                        feature.properties.centroid,
-                        json.features[tempBlockMap[neighbor]].properties.centroid
-                      ]
-                    }
-                  });
-                  tempNeighborMap.push(key);
-                }
-              });
-            });
-
-            $neighbors = tempNeighbors;
-            $neighborMap = tempNeighborMap;
-            $blocks = json;
-            $extent = bbox(json);
-            $blockMap = tempBlockMap;
-            $districts = tempDistricts;
-            $districtMap = tempDistrictMap;
+            $neighbors = parseResults.tempNeighbors;
+            $neighborMap = parseResults.tempNeighborMap;
+            $blocks = parseResults.json;
+            $extent = bbox(parseResults.json);
+            $blockMap = parseResults.tempBlockMap;
+            $districts = parseResults.tempDistricts;
+            $districtMap = parseResults.tempDistrictMap;
 
             setupGeoJson();
           });

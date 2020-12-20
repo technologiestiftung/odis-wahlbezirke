@@ -2,7 +2,7 @@
   import { states, blocks, districts, blockMap, districtMap, simulationBlocks, simulationDistricts } from '../../stores';
   import {scaleLinear, max} from 'd3';
   import Map from  '../Map.svelte';
-  import {shuffledList, isCandidate} from './simulation';
+  import {optimization} from '../../libs/simulation';
   
   let map;
   let mapReady;
@@ -40,7 +40,7 @@
   const start = () => {
     if (!active) {
       optimization_state = "running";
-      optimization();
+      optimize();
     } else {
       optimization_state = "pause";
     }
@@ -65,76 +65,19 @@
 
   const problems = __global.env.IGNORE_DISTRICTS.split(",");
 
-  // TODO: Move optimization to lib...
-  const optimization = () => {
-    let changes = 0;
-    $simulationDistricts.forEach((district) => {
-      if (district.population > parseInt(__global.env.LIMIT) && !problems.includes(district.id)) {
-        let selected = false;
-        let ids = shuffledList(district.blocks.length);
-        for (let i = 0; i < ids.length && !selected; i += 1) {
-          if (isCandidate(
-              $simulationBlocks, 
-              $blockMap,
-              $simulationDistricts,
-              $districtMap,
-              district.blocks[ids[i]], 
-              district.id
-            )
-          ) {
-            selected = true;
+  const optimize = () => {
+    const optResults = optimization($simulationDistricts, $simulationBlocks, $blockMap, $districtMap, problems);
 
-            const block_id = district.blocks[ids[i]];
-
-            // get neighbor districts
-            const population = $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_POPULATION];
-            const neighbor_districts = [
-              ...new Set(
-                $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_NEIGHBOR_BLOCKS].filter((d) => {
-                  return $simulationBlocks.features[$blockMap[d]].properties[__global.env.KEY_DISTRICT] != district.id
-                })
-                .map((d) => $simulationBlocks.features[$blockMap[d]].properties[__global.env.KEY_DISTRICT])
-              )
-            ];
-            
-            // remove from current district
-            const bindex = district.blocks.indexOf(block_id);
-            district.blocks.splice(bindex, 1);
-            district.population -= population;
-
-            // calculate the smallest damage
-            let smallest_damage = Number.MAX_VALUE;
-            let smallest_damage_id = null;
-            neighbor_districts.forEach((neighbor: number) => {
-              const damage = $simulationDistricts[$districtMap[neighbor]].population + population - parseInt(__global.env.LIMIT);
-              if (damage < smallest_damage) {
-                smallest_damage = damage;
-                smallest_damage_id = $districtMap[neighbor];
-              }
-            });
-
-            // move block to neighbor district
-            $simulationDistricts[smallest_damage_id].blocks.push(block_id);
-            $simulationDistricts[smallest_damage_id].population += population;
-
-            // update block
-            $simulationBlocks.features[$blockMap[block_id]].properties[__global.env.KEY_DISTRICT] = $simulationDistricts[smallest_damage_id].id;
-            $simulationBlocks.features[$blockMap[block_id]].properties.color = $simulationDistricts[smallest_damage_id].color;
-            $simulationBlocks.features[$blockMap[block_id]].properties.districtPopulation = $simulationDistricts[smallest_damage_id].population;
-
-            changes += 1;
-          }
-        }
-      }
-    });
+    $simulationDistricts = optResults.simulationDistricts;
+    $simulationBlocks = optResults.simulationBlocks;
 
     update();
     $states = $states.concat([JSON.parse(JSON.stringify($simulationDistricts))]);
 
-    if (optimization_state === "pause" || $states.length === 100) {
+    if (optimization_state === "pause" || $states.length >= 100 || optResults.changes === 0) {
       optimization_state = "stop";
     } else {
-      setTimeout(optimization, 300);
+      setTimeout(optimize, 300);
     }
   };
 
