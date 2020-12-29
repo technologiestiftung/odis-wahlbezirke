@@ -100,12 +100,17 @@ To create an optimised version of the app:
 npm run build
 ```
 
+After building the *public* folder holds everything you need. Simply copy it to your destination. You could also serve the whole thing through a service like Netlify and use the public folder as your web root. But you still need to host the server somewhere else. In this case make sure CORS is setup and both are served over HTTPS.
+
+## Code
+The app is build in Svelte, in Typescript. The two scripts simulation and network as well. When you are applying any changes, be careful, because the app and the scripts share the typescript files in src/libs. So make sure if you do change them, to also update the corresponding files.
+
 ## The server
 If you want to allow people to save their variations and others to access those variations you need a server to store the data. We have build a very simple PHP solution for that. (WHAT? PHP? - YES. PHP is available on almost every server and its easy to find a free hosting service for php. And really its just a few lines of code, if you want a python/nodejs solution, it should not require much more lines of code, happy to accept contributions.).
 
 So simply copy the files in the server-folder to your server destination. Make sure the destination is set in the .env file. Run the setup.php file and remove it afterwards. Make sure that script and folder have the correct rights, so the script can create files and folders.
 
-The script receives the block IDs and their corresponding voting district ids, this is then stored as a JSON file (index.php?action=save). A list of uploaded version is also available (index.php?action=list).
+The script receives the block IDs and their corresponding voting district ids, this is then stored as a JSON file (index.php?action=save). A list of uploaded user variations is also available (index.php?action=list).
 
 *IMPORTANT*: This is a very simple php app. It does not have sophisticated security, but we did our best: 1. We parse incoming data into integers so any malicious content is being removed. 2. After 500 uploaded variations the service stops working, to stop any DDOS attacks.
 

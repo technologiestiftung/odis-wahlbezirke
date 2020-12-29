@@ -23,6 +23,7 @@
   }
 
   const limit = parseInt(__global.env.LIMIT);
+  export let navigateToTab;
 </script>
 
 <div id="viewContainer" class="population">
@@ -33,7 +34,7 @@
       In manchen Fällen liegen selbst einzelne Blöcke über diesem Zielwert, diese erhalten einen <span style="color:red;">roten</span> Rand. Diese Blöcke und Wahlbezirke werden bei den weiteren Berechnungen nicht mit einbezogen, da dieses Problem vom Editor nicht gelöst werden kann und statt dessen einer manuellen Überarbeitung bedarf (z.B. große Blöcke aufteilen).<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Um mehr über die Wahlbezirke und Blöcke zu erfahren, einfach die Maus über die Karte bewegen.
-      <!-- TODO: Add continue button through parent function -->
+      <button on:click={() => navigateToTab(1)} class="continue">Weiter &raquo;</button>
     </p>
   </div>
   <Map bind:map bind:mapReady bind:addPopUp />

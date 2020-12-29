@@ -126,6 +126,9 @@
   };
 
   const limit = parseInt(__global.env.LIMIT);
+  const showNetwork = __global.env.SHOW_NETWORK.toLocaleLowerCase();
+
+  export let navigateToTab;
 </script>
 
 <div id="viewContainer" class="simulation">
@@ -140,6 +143,7 @@
         <span class="icon start">▸</span><span class="icon stop">▪</span>&nbsp;<span class="start">starten</span><span class="stop">stop</span>
       </button><br />
       <button class="start" class:active="{active}" class:hidden={!mapReady} on:click={reset}><span class="icon">↺</span>&nbsp;zurücksetzen</button>
+      <button on:click={() => navigateToTab((showNetwork === 'false') ? 3 : 2)} class="continue">Weiter &raquo;</button>
     </p>
   </div>
   <Map bind:map bind:mapReady />

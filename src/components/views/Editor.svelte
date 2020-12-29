@@ -336,6 +336,7 @@ import { feature } from '@turf/turf';
 
     const limit = parseInt(__global.env.LIMIT);
 
+    export let navigateToTab;
 </script>
 
 <div id="viewContainer" class="editor">

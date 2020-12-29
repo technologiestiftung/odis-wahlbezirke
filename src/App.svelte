@@ -11,6 +11,11 @@
 
 	let innerHeight;
 
+	const navigateToTab = (tabId: number) => {
+		selected = navOptions[tabId];
+		intSelected = tabId;
+	};
+
 </script>
 
 <svelte:window bind:innerHeight={innerHeight} />
@@ -49,7 +54,7 @@
 </nav>
 
 <main style="height: {innerHeight-100}px;">
-	<svelte:component this={selected.component}/>
+	<svelte:component this={selected.component} navigateToTab={navigateToTab} />
 </main>
 
 <Footer />

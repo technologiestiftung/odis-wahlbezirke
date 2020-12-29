@@ -188,6 +188,8 @@
     dlAnchorElem.click();
     dlAnchorElem.remove();
   };
+
+  export let navigateToTab;
 </script>
 
 <div id="viewContainer" class="network">
@@ -198,6 +200,7 @@
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Um eine Verbindung zu löschen, einfach auf die Linie klicken. Um eine neue Verbindung zu erstellen, zwei Blöcke nacheinander anklicken. Anschließend kann das aktualisierte GeoJSON heruntergeladen werden.<br /><br />
       <button on:click={downloadGeoJson}>GeoJSON herunterladen</button>
+      <button on:click={() => navigateToTab(2)} class="continue">Weiter &raquo;</button>
     </p>
   </div>
   <Map bind:map bind:mapReady />
