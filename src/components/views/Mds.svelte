@@ -92,12 +92,13 @@
   };
 
   if ($stats.length === 0) {
-    csv('/assets/data/selected_sim_stats.csv')
+    csv('/assets/data/best.csv')
       .then((data) => {
         const newData: { [key: string] : number}[] = new Array(data.length);
 
         /*----- Normalize columns -----*/
         weightKeys.forEach((key) => {
+          console.log(key);
           if (!$weights[key].ignore) {
             data.forEach((d, i) => {
               if (!newData[i]) { newData[i] = {}; }

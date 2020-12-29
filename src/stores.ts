@@ -80,7 +80,7 @@ export const weights = writable({
     label: "Anzahl Wahlbezirke über " + __global.env.LIMIT + " Ew.",
   },
   Average_Population_Size: {
-    ignore: false,
+    ignore: true,
     weight: 5,
     label: "Ø Bevölkerung in Wahlbezirken",
   },

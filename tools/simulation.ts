@@ -53,6 +53,11 @@ if (!fs.existsSync(folder)) {
     fs.mkdirSync(folder);
 }
 
+const bestFolder = 'best';
+if (!fs.existsSync(folder + '/' + bestFolder)) {
+    fs.mkdirSync(folder + '/' + bestFolder);
+}
+
 const count = (process.argv.length > 3) ? parseInt(process.argv[3]) : 1000;
 const iterations = (process.argv.length > 4) ? parseInt(process.argv[4]) : 100;
 const bestof = (process.argv.length > 5) ? parseInt(process.argv[5]) : 10;
@@ -95,7 +100,7 @@ const optimize = () => {
     simulationBlocks = optResults.simulationBlocks;
 
     fs.writeFileSync(`${folder}/simulation_${cCount}_${cIteration}.geojson`, JSON.stringify(simulationDistricts), 'utf8');
-    statistics.push(rank(statistics.length.toString(), `simulation_${cCount}_${cIteration}.geojson`, blocks, simulationBlocks, districts));
+    statistics.push(rank(statistics.length.toString(), `simulation_${cCount}_${cIteration}.geojson`, blocks, simulationBlocks, simulationDistricts));
     
     cIteration += 1;
 
@@ -106,34 +111,44 @@ const optimize = () => {
         if (cCount > count) {
             fs.writeFileSync(`${folder}/statistics.json`, JSON.stringify(statistics));
 
+            const notBest = ['Number_of_Modified_Blocks', 'Number_of_Affected_Districts'];
             const offsetWeights = ['Median_Population_Size', 'Average_Population_Size'];
             const maxValues = {};
             const normalized = [];
-            const weights = [];
-            const best = {};
+            const weights = ['improvement_blocks', 'improvement_districts'];
+            const best = { };
             let bestOverall = [];
             Object.keys(statistics[0]).forEach((key) => {
                 if (key !== 'X' && key !== 'ID') {
                     weights.push(key);
-                    best[key] = [];
                 }
             });
             weights.forEach((key) => {
+                best[key] = [];
                 maxValues[key] = max(statistics, (d) => (offsetWeights.includes(key)) ? Math.abs(d[key] - parseInt(__global.env.LIMIT)) : d[key]);
             });
+
+            // Calculate Improvement Ratio
+            statistics.forEach((stat, i) => {
+                stat['improvement_blocks'] = stat['Number_of_Modified_Blocks'] / maxValues['Number_of_Modified_Blocks'] + stat['Number_of_Overpopulated_Districts'] / maxValues['Number_of_Overpopulated_Districts'];
+                stat['improvement_districts'] = stat['Number_of_Affected_Districts'] / maxValues['Number_of_Modified_Blocks'] + stat['Number_of_Overpopulated_Districts'] / maxValues['Number_of_Overpopulated_Districts'];
+            });
+
             statistics.forEach((stat, i) => {
                 let statSum = 0;
                 const tStat = JSON.parse(JSON.stringify(stat));
                 weights.forEach((key) => {
                     tStat[key] =  (offsetWeights.includes(key)) ? Math.abs(tStat[key] - parseInt(__global.env.LIMIT)) / maxValues[key] : tStat[key] / maxValues[key];
-                    if (best[key].length < bestof) {
-                        best[key].push([tStat[key], i]);
-                        best[key] = best[key].sort(sort);
-                    } else if (tStat[key] < max(best[key], (d) => d[0])) {
-                        best[key][bestof - 1] = [tStat[key], i];
-                        best[key] = best[key].sort(sort);
+                    if (!notBest.includes(key)) {
+                        if (best[key].length < bestof) {
+                            best[key].push([tStat[key], i]);
+                            best[key] = best[key].sort(sort);
+                        } else if (tStat[key] < max(best[key], (d) => d[0])) {
+                            best[key][bestof - 1] = [tStat[key], i];
+                            best[key] = best[key].sort(sort);
+                        }
+                        statSum += tStat[key];
                     }
-                    statSum += tStat[key];
                 });
                 normalized.push(tStat);
                 if (bestOverall.length < bestof) {
@@ -158,13 +173,14 @@ const optimize = () => {
             let csv = csvKeys.join(',');
             const rows = [];
             bestSolutions.map((id) => {
+                fs.copyFileSync(folder + '/' + statistics[id].X, folder + '/' + bestFolder + '/' + statistics[id].X);
                 const cols = [];
                 csvKeys.forEach((key) => {
                     cols.push(statistics[id][key]);
                 });
                 rows.push(cols.join(','));
             });
-            csv += rows.join('\n');
+            csv += '\n' + rows.join('\n');
 
             fs.writeFileSync(`${folder}/best.csv`, csv, 'utf8');
 
