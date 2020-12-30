@@ -195,6 +195,24 @@
       width:100%;
       height:100%;
     }
+    .legend-text{
+      font-style:italic;
+      font-size:12px;
+    }
+  }
+
+  #graph-note{
+    text{
+      font-size: 12px;
+    }
+    rect{
+      fill:gainsboro;
+      stroke:transparent;
+      opacity:0.5;
+    }
+    tspan.largecircle{
+      font-size:24px;
+    }
   }
 
   .axis text{

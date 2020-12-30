@@ -1,6 +1,6 @@
 <script lang="ts">
   import { states, blocks, districts, blockMap, districtMap, simulationBlocks, simulationDistricts } from '../../stores';
-  import {scaleLinear, max} from 'd3';
+  import {scaleLinear, max, select} from 'd3';
   import Map from  '../Map.svelte';
   import {optimization} from '../../libs/simulation';
   
@@ -118,11 +118,20 @@
 
   let graphHeight;
   let graphWidth;
-  const margin = { left: 50, top:5, right:5, bottom:5};
+  const margin = { left: 40, top:30, right:5, bottom:5};
 
   $: sX = scaleLinear().range([0, graphWidth - margin.left - margin.right]).domain([0, $states.length - 1]);
   $: bY = scaleLinear().range([graphHeight - margin.top - margin.bottom, margin.top]).domain([__global.env.LIMIT, max($simulationDistricts, (d) => d.population)]);
   $: yTicks = bY.ticks(10);
+
+  $: {
+    const svgBuffer = 5;
+    select('#graph svg')
+      .attr('width', svgBuffer - 5)
+      .attr('height', svgBuffer - 5)
+      .style('width', (svgBuffer - 5) + 'px')
+      .style('height', (svgBuffer - 5) + 'px');
+  }
 
   $: stateX = (i, state) => {
     return sX(i);
@@ -182,6 +191,9 @@
             </g>
           {/each}
         </g>
+        <g transform="translate(0, 10)">
+          <text class="legend-text">Einwohner*innen je Wahlbezirk</text>
+        </g>
         <g transform="translate({margin.left}, 0)">
           {#each $states as state, i}
           <g transform="translate({stateX(i, state)} 0)">
@@ -197,6 +209,16 @@
           </g>
           {/each}
         </g>
+        {#if graphWidth}
+        <g id="graph-note" transform="translate({graphWidth - 290}, 45)">
+          <rect width="290" height="100" />
+          <text x="0" y="7" dy="0" font-size="12">
+            <tspan x="0" dy=".6em">Jeder <tspan class="largecircle" dy="0.1em">∘</tspan><tspan dx="2" dy="-0.2em"> repräsentiert einen Wahlbezirk. Ziel ist,</tspan></tspan>
+            <tspan x="0" dy="1.2em">dass sich die Kreise nach unten, zum Grenzwert</tspan>
+            <tspan x="0" dy="1.2em">von 2.500 Einwohner*innen, bewegen.</tspan>
+          </text>
+        </g>
+        {/if}
       </svg>
     </div>
   </div>

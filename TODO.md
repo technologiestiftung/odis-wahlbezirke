@@ -4,19 +4,15 @@
 - Simulation: SVG Size of scatter plot not resizing
 - MDS: SVGs cut off
 
-Vor jeder Wahl müssen die Wahlbezirke in den jeweiligen Berliner Bezirken auf ihre räumliche Festlegung geprüft und angepasst werden. Der Grund dafür sind ständig stattfindende Änderungen der Bevölkerungszahlen: In der Regel sollte ein Wahlbezirk nicht mehr als 2.500 deutsche Einwohner:innen beinhalten. Dieses Tool wurde entwickelt, um Teile des Prozesses der Neufestlegung von Wahlbezirken zu automatisieren und somit die Mitarbeitenden der bezirklichen Wahlämter zu unterstützen. Für den hier gezeigten ersten Prototypen, wurden exemplarisch Daten vom Bezirk Tempelhof-Schöneberg aus dem Jahr XXX (Aus welchem (Wahl)Jahr kommen die Daten eigentlich?) verwendet.
-
-Dieses Tool dient dazu, Geodaten im GML-Format gegen eine festgelegte, dem Tool bekannte Datenstruktur zu prüfen. Abweichungen werden anhand von Fehlermeldungen beschrieben. GML ist ein offener Standard für räumliche Daten, basierend auf XML. Mehr zur Anwendung und Hintergrund des Validators finden sie unten sowie in diesem Blogpost (noch nicht live). Der Quellcode dieser Anwendung ist Open Source und auf GitHub verfügbar.
-
-Eventuell ist es eh so geplant, aber ich würde mehr Erklärung zum Tool auf der Seite gebrauchen können. Also zum Beispiel den Text zu den Teilschritten aus Evelyns Blogpost hier auch nochmal zum nachlesen. Die ersten beiden Reiter „Aktuelle Lage“ und „Netzwerk“ sind gut erklärt und leicht verständlich, hier gibt es keine Verständnisprobleme. Ab „Varianten erstellen“ war ich dann teilweise etwas verwirrt. Hier was mir so aufgefallen ist:
-
- 
+> Intro-Text wurde angepasst.
 
 - Ab „Varianten erstellen“ fehlen in den Karten die +,- und Pfeile zum Navigieren in der Karte. > Sollte eigentlich überall funktionieren, bitte sonst nochmal Browser & OS schicken...
 
-Die Simulationen stoppen wenn 100 Iterationen erreicht werden. Wenn man dann links auf stop und dann wieder auf Start drückt laufen die Simulationen weiter. Vielleicht ist es so gewollt, ich würde dann aber beim Stopp den Button automatisch zu „Start“ wechseln lassen, damit man erkennt, dass das Programm sich nicht aufgehangen hat, sondern „fertig“ ist.
-Ich verstehe leider die „Simulationsübersicht“ nicht. Was heißen denn die Zahlen auf der Y-Achse?
-Bei Vergleichen und Auswählen verstehe ich den Scatterplot nicht. Wie werden denn all diese Bewertungskriterien auf 2 Dimensionen runtergebrochen? Was sind X und Y Achse des Plots? Was bedeutet diese Colorbar unter dem Scatterplot? Vielleicht stecke ich hier zu wenig im Thema drin.
+- Die Simulationen stoppen wenn 100 Iterationen erreicht werden. Wenn man dann links auf stop und dann wieder auf Start drückt laufen die Simulationen weiter. Vielleicht ist es so gewollt, ich würde dann aber beim Stopp den Button automatisch zu „Start“ wechseln lassen, damit man erkennt, dass das Programm sich nicht aufgehangen hat, sondern „fertig“ ist. > Habe jetzt die States der Buttons optimiert. Wenn ein Ende erreicht ist, kann man auf zurücksetzen klicken und dann erscheint der Start-Button wieder.
+
+- Ich verstehe leider die „Simulationsübersicht“ nicht. Was heißen denn die Zahlen auf der Y-Achse? > Ich habe hier nun noch eine kleine Infobox eingebaut, welche den Scatterplot (hoffe ich zumindest) besser erklärt.
+
+- Bei Vergleichen und Auswählen verstehe ich den Scatterplot nicht. Wie werden denn all diese Bewertungskriterien auf 2 Dimensionen runtergebrochen? Was sind X und Y Achse des Plots? Was bedeutet diese Colorbar unter dem Scatterplot? Vielleicht stecke ich hier zu wenig im Thema drin.
  
 So, dass sind eigentlich die wesentlichen Punkte. Zur Usability gibt es noch ein paar Kleinigkeiten:
 

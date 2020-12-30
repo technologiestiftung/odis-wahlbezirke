@@ -33,8 +33,10 @@
 			Mit offenen Daten in die nächste Wahlsaison.
 		</p>
 		<p class="headline-04">
-			Dieses Tool dient dazu, Geodaten im GML-Format gegen eine festgelegte, dem Tool bekannte Datenstruktur zu prüfen. Abweichungen werden anhand von Fehlermeldungen beschrieben. GML ist ein offener Standard für räumliche Daten, basierend auf XML.
-			Mehr zur Anwendung und Hintergrund des Validators finden sie unten.
+			Vor jeder Wahl müssen die Wahlbezirke in den jeweiligen Berliner Bezirken auf ihre räumliche Festlegung geprüft und angepasst werden. Der Grund dafür sind ständig stattfindende Änderungen der Bevölkerungszahlen: In der Regel sollte ein Wahlbezirk nicht mehr als 2.500 deutsche Einwohner:innen beinhalten. Dieses Tool wurde entwickelt, um Teile des Prozesses der Neufestlegung von Wahlbezirken zu automatisieren und somit die Mitarbeitenden der bezirklichen Wahlämter zu unterstützen. Für den hier gezeigten ersten Prototypen, wurden exemplarisch Daten vom Bezirk Tempelhof-Schöneberg aus dem Europ-Wahljahr 2019 verwendet.
+		</p>
+		<p class="headline-04">
+			Dieses Tool dient dazu, Geodaten im GML-Format gegen eine festgelegte, dem Tool bekannte Datenstruktur zu prüfen. Abweichungen werden anhand von Fehlermeldungen beschrieben. GML ist ein offener Standard für räumliche Daten, basierend auf XML. Mehr zur Anwendung und Hintergrund des Validators finden sie unten sowie in diesem Blogpost (noch nicht live). Der Quellcode dieser Anwendung ist Open Source und auf GitHub verfügbar.
 		</p>
 	</div>
 </div>
