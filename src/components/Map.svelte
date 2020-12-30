@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
   import mapbox from "mapbox-gl";
   import {scaleOrdinal, schemeCategory10} from 'd3';
-  import {centroid, bbox} from '@turf/turf';
+  import {bbox} from '@turf/turf';
 
   export let map;
   let container;
@@ -24,7 +24,7 @@
       style: "mapbox://styles/mapbox/light-v10",
       center: [13.373722095390642, 52.44048953691126],
       zoom: 11,
-      scrollZoom: false,
+      // scrollZoom: false,
     });
 
     map.addControl(new mapbox.NavigationControl(), 'bottom-left');
