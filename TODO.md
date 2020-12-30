@@ -14,10 +14,10 @@
 
 - Bei Vergleichen und Auswählen verstehe ich den Scatterplot nicht. Wie werden denn all diese Bewertungskriterien auf 2 Dimensionen runtergebrochen? Was sind X und Y Achse des Plots? Was bedeutet diese Colorbar unter dem Scatterplot? Vielleicht stecke ich hier zu wenig im Thema drin.
  
-So, dass sind eigentlich die wesentlichen Punkte. Zur Usability gibt es noch ein paar Kleinigkeiten:
+- Ich fände es hilfreich, wenn man in der Karte mittels Mausrad scrollen könnte. > Habe ich angepasst. Falls ihr es irgendwann anders wollt, es ist nur eine Zeile in Map.svelte, die ihr entkommentieren müsst.
 
-Ich fände es hilfreich, wenn man in der Karte mittels Mausrad scrollen könnte.
-Bei der aktuellen Lage musste ich 2 mal gucken welche Bezirke hier „hervorgehoben“ sind. Vielleicht kann man die nicht hervorgehobenen Bezirke noch ein kleines bisschen transparenter machen, oder die hervorgehobenen schwarz umranden.
+- Bei der aktuellen Lage musste ich 2 mal gucken welche Bezirke hier „hervorgehoben“ sind. Vielleicht kann man die nicht hervorgehobenen Bezirke noch ein kleines bisschen transparenter machen, oder die hervorgehobenen schwarz umranden. > 
+
 Auf dem Tooltip der beim Mausover über die Blöcke kommt, würde ich „Einwohner:innen“ statt „Bevölkerung“ schreiben.
 Ich finde es mutig, dass man Varianten für alle zugänglich abspeichern kann, unter beliebigem Namen. Hoffentlich gibt es keine Trolle in der Verwaltung 😃
  

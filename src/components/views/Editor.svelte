@@ -33,8 +33,8 @@ import { feature } from '@turf/turf';
             map.setPaintProperty('blocks', 'fill-opacity', [
                 'case',
                 ['>', ['get', 'districtPopulation'], parseInt(__global.env.LIMIT)],
-                0.7,
-                0.2
+                0.85,
+                0.1
             ]);
 
             map.on('click', 'blocks', (e) => {
