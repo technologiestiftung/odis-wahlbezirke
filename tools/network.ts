@@ -43,7 +43,6 @@ geojson.features.forEach((feature, f) => {
 });
 
 geojson.features.forEach((feature, f) => {
-    console.log(`${geojson.features.length} / ${f}`);
     feature.properties[__global.env.KEY_NEIGHBORS] = [];
     feature.properties[__global.env.KEY_NEIGHBOR_BLOCKS] = [];
     const source = buffers[f];

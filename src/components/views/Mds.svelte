@@ -98,7 +98,6 @@
 
         /*----- Normalize columns -----*/
         weightKeys.forEach((key) => {
-          console.log(key);
           if (!$weights[key].ignore) {
             data.forEach((d, i) => {
               if (!newData[i]) { newData[i] = {}; }
@@ -174,7 +173,7 @@
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Verändern Sie die Gewichtung, um ein anderes Ranking zu erreichen. Fahren Sie mit der Maus über die Histogramme (rechts) um die Werte im Scatterplot (mitte) zu sehen. Oder fahren Sie mit der Maus über einzelne Punkte um die zugehörigen Werte in den Histogrammen abzulesen (roter Punkt) und die tatsächlichen Distanzen zu diesem Punkt im Scatterplot farblich abzulesen.
     </p>
-    <button on:click={() => navigateToTab((showNetwork === 'false') ? 4 : 3)} class="continue">Weiter &raquo;</button>
+    <button on:click={() => navigateToTab((showNetwork === 'false') ? 3 : 4)} class="continue">Weiter &raquo;</button>
   </div>
   <div id="scatterplot" bind:clientWidth={graphWidth} bind:clientHeight={graphHeight}>
     <svg>

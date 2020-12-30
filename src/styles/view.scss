@@ -42,6 +42,16 @@
   clear:both;
 }
 
+#sidebar button.continue{
+  clear:both;
+  margin-top:25px;
+  float: left;
+  background:rgb(150, 150, 150);
+  &:hover{
+    background:rgb(100, 100, 100);
+  }
+}
+
 /*----- Population / Network -----*/
 #viewContainer.population,
 #viewContainer.network{
@@ -114,11 +124,11 @@
     display:none;
   }
   .start{
-    display:inline-block;
+    display:block;
   }
   .active{
     .stop{
-      display:inline-block;
+      display:block;
     }
     .start{
       display:none;

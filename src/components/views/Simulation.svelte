@@ -8,6 +8,7 @@
   let mapReady;
 
   let active = false;
+  let endReached = false;
   let optimization_state = "stop";
   const list_color = scaleLinear<string>().range(['rgb(255,255,255)', 'rgb(255,0,0)']);
 
@@ -50,6 +51,7 @@
   const reset = () => {
     optimization_state = "stop";
     active = false;
+    endReached = false;
     $states = [];
     $simulationBlocks = JSON.parse(JSON.stringify($blocks));
     $simulationDistricts = JSON.parse(JSON.stringify($districts));
@@ -74,8 +76,13 @@
     update();
     $states = $states.concat([JSON.parse(JSON.stringify($simulationDistricts))]);
 
-    if (optimization_state === "pause" || $states.length >= 100 || optResults.changes === 0) {
+    if (optimization_state === "pause") {
       optimization_state = "stop";
+      active = false;
+    } else if ($states.length >= 100 || optResults.changes === 0) {
+      optimization_state = "stop";
+      active = false;
+      endReached = true;
     } else {
       setTimeout(optimize, 300);
     }
@@ -139,11 +146,11 @@
       Um die besten Varianten zu finden, werden tausende solcher Kombinationen binnen weniger Minuten generiert und anschließend miteinander verglichen.<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Nutzen Sie die Buttons um eine Simulation zu starten, zur Veranschaulichung ist diese um ein vielfaches verlangsamt.<br /><br />
-      <button id="startButton" class:hidden={!mapReady} class:active="{active}" on:click={start}>
+      <button id="startButton" class:hidden={!mapReady || endReached} class:active="{active}" on:click={start}>
         <span class="icon start">▸</span><span class="icon stop">▪</span>&nbsp;<span class="start">starten</span><span class="stop">stop</span>
       </button><br />
       <button class="start" class:active="{active}" class:hidden={!mapReady} on:click={reset}><span class="icon">↺</span>&nbsp;zurücksetzen</button>
-      <button on:click={() => navigateToTab((showNetwork === 'false') ? 3 : 2)} class="continue">Weiter &raquo;</button>
+      <button on:click={() => navigateToTab((showNetwork === 'false') ? 2 : 3)} class="continue">Weiter &raquo;</button>
     </p>
   </div>
   <Map bind:map bind:mapReady />
