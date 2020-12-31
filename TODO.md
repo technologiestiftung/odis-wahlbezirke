@@ -1,5 +1,3 @@
-- In Analyse Variante auswählen und im Editor anzeigen
-
 > Abgeschnittene Safari SVGs werden nun angezeigt.
 
 > Intro-Text wurde angepasst.

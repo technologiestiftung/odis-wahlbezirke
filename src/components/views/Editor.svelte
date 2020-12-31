@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { currentVariation, currentVariationLoaded, variations, variationDefinitions, states, blocks, districts, blockMap, districtMap, editorBlocks, editorDistricts, simulationBlocks, simulationDistricts, stats, neighbors } from '../../stores';
-    import {scaleLinear, max, filter} from 'd3';
-    import Map from  '../Map.svelte';
-    import {onMount} from 'svelte';
-import { feature } from '@turf/turf';
+
+import { currentVariation, currentVariationLoaded, variations, variationDefinitions, states, blocks, districts, blockMap, districtMap, editorBlocks, editorDistricts, simulationBlocks, simulationDistricts, stats, neighbors } from '../../stores';
+import {scaleLinear, max, csv} from 'd3';
+import Map from  '../Map.svelte';
+import {onMount} from 'svelte';
+import App from '../../App.svelte';
 
     let map;
     let mapReady;
@@ -179,7 +180,7 @@ import { feature } from '@turf/turf';
             if ($currentVariation !== null && $currentVariation !== 'null' && $currentVariation !== 'simulation') {
                 let load;
 
-                if ($currentVariation.indexOf('public/assets/data/best/') !== -1) {
+                if ($currentVariation.indexOf('assets/data/best/') !== -1) {
                     load = fetch($currentVariation);
                 } else {
                     load = fetch(__global.env.SERVER + '/data/' + $currentVariation);
@@ -237,11 +238,32 @@ import { feature } from '@turf/turf';
 
     $: {
         if ($variations.length === 0) {
-            fetch(__global.env.SERVER + '/index.php?action=list&time=' + new Date().getTime())
-                .then((result) => result.json())
+            csv('/assets/data/best.csv')
                 .then((data) => {
-                    $variations = data;
+                    const newVariations = [];
+                    data.forEach((d) => {
+                        newVariations.push({
+                            filename: d.X,
+                            name: d.X.split('/assets/data/best/')[1].split('.')[0].split('_').map((str) => str.charAt(0).toUpperCase() + str.slice(1)).join(' ')
+                        });
+                    });
+                    $variations = [...$variations, ...newVariations];
                 });
+            
+            if (__global.env.ALLOW_SAVE.toLowerCase() === 'true') {
+                fetch(__global.env.SERVER + '/index.php?action=list&time=' + new Date().getTime())
+                    .then((result) => result.json())
+                    .then((data) => {
+                        const newVariations = [];
+                        data.forEach((d) => {
+                            newVariations.push({
+                                filename: d.filename,
+                                name: d.name,
+                            });
+                        });
+                        $variations = [...$variations, ...newVariations];
+                    });
+            }
         }
     }
 
@@ -344,6 +366,8 @@ import { feature } from '@turf/turf';
     const limit = parseInt(__global.env.LIMIT);
     const allow_save = __global.env.ALLOW_SAVE.toLowerCase();
 
+    export let navigateToTab;
+
 </script>
 
 <div id="viewContainer" class="editor">
@@ -357,12 +381,12 @@ import { feature } from '@turf/turf';
             Anschließend können Sie Ihre Variante für alle zugänglich abspeichern oder sich das Ergebnis als GeoJSON herunterladen.<br /><br />
             <strong style="clear:both; display:block;">Wählen Sie eine andere Variante:</strong>
             <select bind:value={selectedVariation}>
-                <option value="null">Aktuelle Situation</option>
+                <option value="null" selected={selectedVariation === 'null'}>Aktuelle Situation</option>
                 {#if $simulationBlocks.features.length > 0}
-                     <option value="simulation">Simulation</option>
+                     <option value="simulation" selected={selectedVariation === 'simulation'}>Simulation</option>
                 {/if}
                 {#each $variations as variation}
-                <option value={variation.filename}>{variation.name}</option>
+                <option value={variation.filename} selected={selectedVariation === variation.filename}>{variation.name}</option>
                 {/each}
             </select>
             <button style="margin-bottom:20px;" on:click={loadVariation}>Variante laden</button>
@@ -387,6 +411,7 @@ import { feature } from '@turf/turf';
         </ul>
         <div id="editor-stats" bind:clientWidth={statsWidth} bind:clientHeight={statsHeight}>
             <svg>
+                {#if statsHeight > (statsMargin.top + statsMargin.bottom + 30)}
                 <g class="legend" transform="translate({statsMargin.left} {statsMargin.top})">
                     <rect style="fill:#2e91d2;" width="20" height="20" />
                     <text text-anchor="start" x="25" y="14">&lt;= {limit} ({$editorDistricts.filter((d) => d.population <= {limit}).length})</text>
@@ -399,6 +424,7 @@ import { feature } from '@turf/turf';
                     <rect style="fill:#2e91d2;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= limit).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
                     <rect x="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population <= limit).length}" style="fill:#E60032;" width="{(statsWidth - statsMargin.left - statsMargin.right) / $editorDistricts.length * $editorDistricts.filter((d) => d.population > limit).length}" height="{statsHeight - statsMargin.top - statsMargin.bottom - 30}" />
                 </g>
+                {/if}
             </svg>
         </div>
         {#if selectedBlock}
