@@ -1,8 +1,6 @@
 - In Analyse Variante auswählen und im Editor anzeigen
 
-# SAFARI
-- Simulation: SVG Size of scatter plot not resizing
-- MDS: SVGs cut off
+> Abgeschnittene Safari SVGs werden nun angezeigt.
 
 > Intro-Text wurde angepasst.
 
@@ -12,7 +10,7 @@
 
 - Ich verstehe leider die „Simulationsübersicht“ nicht. Was heißen denn die Zahlen auf der Y-Achse? > Ich habe hier nun noch eine kleine Infobox eingebaut, welche den Scatterplot (hoffe ich zumindest) besser erklärt.
 
-- Bei Vergleichen und Auswählen verstehe ich den Scatterplot nicht. Wie werden denn all diese Bewertungskriterien auf 2 Dimensionen runtergebrochen? Was sind X und Y Achse des Plots? Was bedeutet diese Colorbar unter dem Scatterplot? Vielleicht stecke ich hier zu wenig im Thema drin. > 
+- Bei Vergleichen und Auswählen verstehe ich den Scatterplot nicht. Wie werden denn all diese Bewertungskriterien auf 2 Dimensionen runtergebrochen? Was sind X und Y Achse des Plots? Was bedeutet diese Colorbar unter dem Scatterplot? Vielleicht stecke ich hier zu wenig im Thema drin. > Diese Ansicht ist tatsächlich etwas komplexer. Ich habe versucht die Beschreibung etwas besser zu machen und auch eine Legende zur Color-Scale hinzugefügt.
  
 - Ich fände es hilfreich, wenn man in der Karte mittels Mausrad scrollen könnte. > Habe ich angepasst. Falls ihr es irgendwann anders wollt, es ist nur eine Zeile in Map.svelte, die ihr entkommentieren müsst.
 
@@ -23,3 +21,5 @@
 - Ich finde es mutig, dass man Varianten für alle zugänglich abspeichern kann, unter beliebigem Namen. Hoffentlich gibt es keine Trolle in der Verwaltung 😃 > Ich habe nun bei den Environmental Variables noch einen Wert hinzugefügt, welcher das Speichern de-/aktiviere kann. Ich habe euch nun zwei Varianten aufgesetzt: odis-wahlbezirke.netlify.app (ohne speichern) und wahlbezirke.odis-berlin.de (mit abspeichern). Abgesehen vom Speichern, sind beide Varianten identisch. Herunterladen kann man sich seinen Edit auch ohne Abspeichern.
  
 > Rechtschreibfehler wurden angepasst.
+
+> Man kann nun auch Varianten in der Ansicht "Vergleichen" aussuchen und dann im Editor bearbeiten.

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {blocks, districts, simulationBlocks, simulationDistricts, stats, weights, joinedStats} from '../../stores';
+  import {blocks, districts, simulationBlocks, simulationDistricts, stats, weights, joinedStats, currentVariationLoaded, currentVariation} from '../../stores';
   import MdsGraph from './MdsGraph.svelte';
   import {csv, min, max, scaleLinear, extent, scaleSqrt, interpolateViridis, scaleSequentialSqrt} from 'd3';
   import {transpose} from 'numeric';
@@ -94,7 +94,12 @@
   if ($stats.length === 0) {
     csv('/assets/data/best.csv')
       .then((data) => {
-        const newData: { [key: string] : number}[] = new Array(data.length);
+        const newData: {
+          ID?: string;
+          X?: string;
+        }[] & {
+          [key: string]: number;
+        }[] = new Array(data.length);
 
         /*----- Normalize columns -----*/
         weightKeys.forEach((key) => {
@@ -110,6 +115,10 @@
                 (d[key] - $weights[key].min) / ($weights[key].max - $weights[key].min);
             });
           }
+        });
+        data.forEach((d, i) => {
+          newData[i]['X'] = d.X;
+          newData[i]['ID'] = d.ID;
         });
         $stats = newData;
         $joinedStats = [
@@ -163,15 +172,36 @@
   export let navigateToTab;
   const showNetwork = __global.env.SHOW_NETWORK.toLocaleLowerCase();
 
+  const showVariant = (stat) => {
+    if (stat.ID === '0') {
+      $currentVariation = 'null';
+    } else if (stat.ID === '1') {
+      $currentVariation = 'simulation';
+    } else {
+      $currentVariation = stat.X;
+    }
+    $currentVariationLoaded = false;
+    navigateToTab((showNetwork === 'false') ? 3 : 4);
+  };
+
 </script>
 
 <div id="viewContainer" class="mds">
   <div id="sidebar">
     <h3>Legende</h3>
     <p>
-      Aus den über 100.000 Varianten die über die Simulation generiert wurden haben wir die 60 besten Ergebnisse ausgewählt. Welche Variante wirklich am besten geeignet ist, hängt stark von den eigenen Präferenzen ab. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden. In diesem Dashboard lässt sich über Regler einstellen, welche Optionen einem wichtig sind. Im Scatterplot (mitte) werden die verschiedenen Bewertungen auf zwei Dimensionen heruntergebrochen.<br /><br />
+      Aus den über 100.000 Varianten die über die Simulation generiert wurden, haben wir die 60 besten Ergebnisse ausgewählt. Welche Variante wirklich am besten geeignet ist, hängt stark von den eigenen Präferenzen ab. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden.<br /><br />
+      In diesem Dashboard lässt sich über Regler einstellen, welche Optionen einem wichtig sind. Im Scatterplot (mitte) werden die verschiedenen Bewertungen auf zwei Dimensionen heruntergebrochen. Die x- und y-Achse entspricht dabei keinen Werten, es geht bei dieser Darstellung lediglich um die Ähnlichkeit der Varianten. Varianten die nah beieinander sind, sind ähnlicher als Punkte die weiter auseinander liegen.<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
-      Verändern Sie die Gewichtung, um ein anderes Ranking zu erreichen. Fahren Sie mit der Maus über die Histogramme (rechts) um die Werte im Scatterplot (mitte) zu sehen. Oder fahren Sie mit der Maus über einzelne Punkte um die zugehörigen Werte in den Histogrammen abzulesen (roter Punkt) und die tatsächlichen Distanzen zu diesem Punkt im Scatterplot farblich abzulesen.
+      Verändern Sie die Gewichtung, um ein anderes Ranking zu erreichen. Fahren Sie mit der Maus über die Histogramme (rechts) um die Werte im Scatterplot (mitte) zu sehen. Oder fahren Sie mit der Maus über einzelne Punkte um die zugehörigen Werte in den Histogrammen abzulesen (roter Punkt). Klicken Sie auf eine der Varianten in der Mitte, um diese im Editor zu bearbeiten.<br /><br />
+      <svg class="smallIcon" width="12" height="12"><circle cx="6" cy="6" r="6" fill="black" /></svg> - 60 beste Varianten<br />
+      <svg class="smallIcon" width="12" height="12"><rect width="12" height="12" fill="black" /></svg> - Aktuelle Lage<br />
+      {#if $simulationBlocks.features.length > 0}
+      <svg class="smallIcon" width="12" height="12"><path transform="translate(6 6)" d="M0 -6L6 0L0 6L-6 0L0 -6Z" fill="black" /></svg> - Simulation
+      {/if}
+      {#if showPoint}
+      <br /><br />Die Berechnung der Abstände in Bezug auf Ähnlichkeit ist komplex und schafft Fehler. Die Farbe zur absoluten Entfernung zeigt die genaue Ähnlichkeit in Abhängigkeit vom aktuell ausgewählten Punkt.<br /><br />
+      {/if}
     </p>
     <button on:click={() => navigateToTab((showNetwork === 'false') ? 3 : 4)} class="continue">Weiter &raquo;</button>
   </div>
@@ -202,6 +232,7 @@
           <g
             on:mouseenter={() => setPoint(stat, i)}
             on:mouseleave={hidePoint}
+            on:click={() => showVariant(stat)}
             style="fill:{(showPointId) ? scatterColor(distMatrix[showPointId][i]) : 'black'};"
             transform="translate({x(twoDimensions[0][i])} {y(twoDimensions[1][i])})">
             {#if 'ID' in stat && stat.ID === '0'}
@@ -238,6 +269,7 @@
           <line x1={gradientTickX(tick) + 1} x2={gradientTickX(tick) + 1} y1={gradientHeight} y2={gradientHeight+5} />
           <text text-anchor="middle" x={gradientTickX(tick)} y={gradientHeight+15}>{tick}</text>
           {/each}
+          <text text-anchor="end" transform="translate({graphWidth - 45} 18)">Absolute Ahnlichkeits-Distanz zur ausgewählten Variante</text>
         </g>
         {/if}
       </g>

@@ -177,8 +177,15 @@ import { feature } from '@turf/turf';
                 $editorDistricts = JSON.parse(JSON.stringify($districts));
             }
             if ($currentVariation !== null && $currentVariation !== 'null' && $currentVariation !== 'simulation') {
-                fetch(__global.env.SERVER + '/data/' + $currentVariation)
-                    .then((result) => result.json())
+                let load;
+
+                if ($currentVariation.indexOf('public/assets/data/best/') !== -1) {
+                    load = fetch($currentVariation);
+                } else {
+                    load = fetch(__global.env.SERVER + '/data/' + $currentVariation);
+                }
+
+                load.then((result) => result.json())
                     .then((data) => {
 
                         $editorBlocks.features.forEach((feature) => {
@@ -337,7 +344,6 @@ import { feature } from '@turf/turf';
     const limit = parseInt(__global.env.LIMIT);
     const allow_save = __global.env.ALLOW_SAVE.toLowerCase();
 
-    export let navigateToTab;
 </script>
 
 <div id="viewContainer" class="editor">
