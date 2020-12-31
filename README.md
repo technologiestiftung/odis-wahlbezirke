@@ -2,8 +2,6 @@
 
 With the code in this repository you can assign spatial units (blocks) to voting districts. The idea of the process is not to completely automate the endeavour, but create variations and allow the user to chose from those and do the final adjustments manually herself.
 
-SCREENSHOT
-
 ---
 
 ## Requirements
