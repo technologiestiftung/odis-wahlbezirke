@@ -173,7 +173,15 @@ const optimize = () => {
             let csv = csvKeys.join(',');
             const rows = [];
             bestSolutions.map((id) => {
-                fs.copyFileSync(folder + '/' + statistics[id].X, folder + '/' + bestFolder + '/' + statistics[id].X);
+                const json = JSON.parse(fs.readFileSync(folder + '/' + statistics[id].X, 'utf8'));
+                const output = {};
+                json.forEach((district) => {
+                    district.blocks.forEach((block) => {
+                    output[block] = district.id;
+                    });
+                });
+                fs.writeFileSync(folder + '/' + bestFolder + '/' + statistics[id].X, JSON.stringify(output), 'utf8');
+                statistics[id].X = '/assets/data/best/' + statistics[id].X;
                 const cols = [];
                 csvKeys.forEach((key) => {
                     cols.push(statistics[id][key]);
