@@ -169,7 +169,7 @@
   <div id="sidebar">
     <h3>Legende</h3>
     <p>
-      Aus den vielen Varianten die über die Simulation generiert wurden haben wir die ein paar der besten Varianten ausgewählt. Was wirklich die Beste ist, hängt stark von den eigenen Präferenzen aus. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden. In diesem Dashboard lässt sich über Regler einstellen, welche Optionen einem wichtig sind. Im Scatterplot (mitte) werden die verschiedenen Bewertungen auf zwei Dimensionen heruntergebrochen.<br /><br />
+      Aus den über 100.000 Varianten die über die Simulation generiert wurden haben wir die 60 besten Ergebnisse ausgewählt. Welche Variante wirklich am besten geeignet ist, hängt stark von den eigenen Präferenzen ab. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden. In diesem Dashboard lässt sich über Regler einstellen, welche Optionen einem wichtig sind. Im Scatterplot (mitte) werden die verschiedenen Bewertungen auf zwei Dimensionen heruntergebrochen.<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Verändern Sie die Gewichtung, um ein anderes Ranking zu erreichen. Fahren Sie mit der Maus über die Histogramme (rechts) um die Werte im Scatterplot (mitte) zu sehen. Oder fahren Sie mit der Maus über einzelne Punkte um die zugehörigen Werte in den Histogrammen abzulesen (roter Punkt) und die tatsächlichen Distanzen zu diesem Punkt im Scatterplot farblich abzulesen.
     </p>

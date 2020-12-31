@@ -99,7 +99,7 @@
         
         const description = `<div id="mapbox-popup">
           <p class="headline">ID: ${e.features[0].properties[__global.env.KEY_ID]}</p>
-          <p>Bevölkerung:</p>
+          <p>Einwohner*innen:</p>
           <table>
             <thead>
               <tr>

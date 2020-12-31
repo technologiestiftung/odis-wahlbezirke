@@ -124,15 +124,6 @@
   $: bY = scaleLinear().range([graphHeight - margin.top - margin.bottom, margin.top]).domain([__global.env.LIMIT, max($simulationDistricts, (d) => d.population)]);
   $: yTicks = bY.ticks(10);
 
-  $: {
-    const svgBuffer = 5;
-    select('#graph svg')
-      .attr('width', svgBuffer - 5)
-      .attr('height', svgBuffer - 5)
-      .style('width', (svgBuffer - 5) + 'px')
-      .style('height', (svgBuffer - 5) + 'px');
-  }
-
   $: stateX = (i, state) => {
     return sX(i);
   };
@@ -182,7 +173,7 @@
     </ul>
     <h3>Simulationsübersicht <span>(Iteration {$states.length})</span></h3>
     <div id="graph" bind:clientWidth={graphWidth} bind:clientHeight={graphHeight}>
-      <svg>
+    <svg>
         <g class="axis y-axis" transform="translate({margin.left}, {margin.top})">
           {#each yTicks as tick}
             <g class="tick" transform="translate(0, {bY(tick) - margin.bottom})">

@@ -14,6 +14,7 @@ declare global {
       SHOW_NETWORK: string;
       IGNORE_DISTRICTS: string;
       LIMIT: string;
+      ALLOW_SAVE: string;
     }
   };
 

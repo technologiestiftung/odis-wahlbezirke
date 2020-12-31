@@ -335,6 +335,7 @@ import { feature } from '@turf/turf';
     const neighborId = __global.env.KEY_NEIGHBORS;
 
     const limit = parseInt(__global.env.LIMIT);
+    const allow_save = __global.env.ALLOW_SAVE.toLowerCase();
 
     export let navigateToTab;
 </script>
@@ -359,7 +360,7 @@ import { feature } from '@turf/turf';
                 {/each}
             </select>
             <button style="margin-bottom:20px;" on:click={loadVariation}>Variante laden</button>
-            {#if modified}
+            {#if modified && allow_save === 'true'}
             <strong>Eigene Variante abspeichern:</strong>
             <input bind:value={variationName} type="text" placeholder="Name für Variante" />
             <button on:click={saveVariation} style="margin-bottom:20px;">Speichern</button>

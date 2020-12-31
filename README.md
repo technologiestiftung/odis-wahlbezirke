@@ -42,6 +42,7 @@ Edit the .env file:
 | SHOW_NETWORK | Should the tab **network** be shown in the app? |
 | IGNORE_DISTRICTS | Sometimes there are just odd voting districts in your dataset that mess everything up. You can enter a comma-separated list of voting districts, which will be ignored for the automation part. |
 | LIMIT | What is the desired population limit for each voting district? |
+| ALLOW_SAVE | Should users be allowed to save their edits? |
 
 ### Setup
 
