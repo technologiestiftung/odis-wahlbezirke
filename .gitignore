@@ -4,3 +4,4 @@ sim
 .DS_Store
 newBest.csv
 tools/clean-best.js
+public/.htaccess
