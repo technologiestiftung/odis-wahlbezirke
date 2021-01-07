@@ -5,3 +5,4 @@ sim
 newBest.csv
 tools/clean-best.js
 public/.htaccess
+public/.htpasswd
