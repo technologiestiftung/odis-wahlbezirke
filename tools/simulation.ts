@@ -184,8 +184,10 @@ const optimize = () => {
                 rawRows.forEach((row) => {
                     let allMatch = true;
                     row.forEach((col, c) => {
-                        if (col !== cols[c]) {
-                            allMatch = false;
+                        if (c > 1) {
+                            if (col !== cols[c]) {
+                                allMatch = false;
+                            }
                         }
                     });
                     if (allMatch) {
