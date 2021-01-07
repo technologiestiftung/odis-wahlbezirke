@@ -190,11 +190,11 @@
   <div id="sidebar">
     <h3>Legende</h3>
     <p>
-      Aus den über 100.000 Varianten die über die Simulation generiert wurden, haben wir die 60 besten Ergebnisse ausgewählt. Welche Variante wirklich am besten geeignet ist, hängt stark von den eigenen Präferenzen ab. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden.<br /><br />
+      Aus den über 100.000 Varianten die über die Simulation generiert wurden, haben wir die {$stats.length} besten Ergebnisse ausgewählt. Welche Variante wirklich am besten geeignet ist, hängt stark von den eigenen Präferenzen ab. Sollen möglichst wenig Wahlbezirke zu groß sein, sollen möglichst wenig Wahlbezirke verändert werden oder eine möglichst gleichmäßige Verteilung erreicht werden.<br /><br />
       In diesem Dashboard lässt sich über Regler einstellen, welche Optionen einem wichtig sind. Im Scatterplot (mitte) werden die verschiedenen Bewertungen auf zwei Dimensionen heruntergebrochen. Die x- und y-Achse entspricht dabei keinen Werten, es geht bei dieser Darstellung lediglich um die Ähnlichkeit der Varianten. Varianten die nah beieinander sind, sind ähnlicher als Punkte die weiter auseinander liegen.<br /><br />
       <img src="/assets/images/pointer.png" alt="Pointer" class="pointer" />
       Verändern Sie die Gewichtung, um ein anderes Ranking zu erreichen. Fahren Sie mit der Maus über die Histogramme (rechts) um die Werte im Scatterplot (mitte) zu sehen. Oder fahren Sie mit der Maus über einzelne Punkte um die zugehörigen Werte in den Histogrammen abzulesen (roter Punkt). Klicken Sie auf eine der Varianten in der Mitte, um diese im Editor zu bearbeiten.<br /><br />
-      <svg class="smallIcon" width="12" height="12"><circle cx="6" cy="6" r="6" fill="black" /></svg> - 60 beste Varianten<br />
+      <svg class="smallIcon" width="12" height="12"><circle cx="6" cy="6" r="6" fill="black" /></svg> - {$stats.length} beste Varianten<br />
       <svg class="smallIcon" width="12" height="12"><rect width="12" height="12" fill="black" /></svg> - Aktuelle Lage<br />
       {#if $simulationBlocks.features.length > 0}
       <svg class="smallIcon" width="12" height="12"><path transform="translate(6 6)" d="M0 -6L6 0L0 6L-6 0L0 -6Z" fill="black" /></svg> - Simulation
