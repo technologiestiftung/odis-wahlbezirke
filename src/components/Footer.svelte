@@ -1,6 +1,10 @@
 <div class="odis">
   <div class="section-wrapper white">
     <div class="section pt-5 pb-5">
+      <p class="headline-05"> Die Daten zu Wahlbezirken / Wahlkreisen wurden vom Amt für Statistik Berlin-Brandenburg unter CC-BY veröffentlicht. Die Einwohnerdaten auf Blockebene wurden durch den Bezirk Tempelhof-Schöneberg (basierend auf Daten des Amtes für Statistik Berlin-Brandenburg) zur Verfügung gestellt.
+        </p>
+    </div>
+    <div class="section pt-5 pb-5">
       <p class="headline-05"> ODIS wird von der Senatsverwaltung für Wirtschaft, Energie und Betriebe und der Investitionsbank Berlin aus den Mitteln des Landes Berlin gefördert. Das Tool wurde im Rahmen eines Projekts mit der Senatsverwaltung für Stadtentwicklung und Wohnen entwickelt.
       </p>
       <div class="credentials">
