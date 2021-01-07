@@ -35,6 +35,7 @@ import {parseData} from '../src/libs/data';
 import {optimization} from '../src/libs/simulation';
 import {rank} from '../src/libs/ranking';
 import {max} from 'd3';
+import { all } from 'numeric';
 
 dotenv.config();
 
@@ -172,21 +173,39 @@ const optimize = () => {
             const csvKeys = Object.keys(statistics[0]);
             let csv = csvKeys.join(',');
             const rows = [];
+            const rawRows = [];
             bestSolutions.map((id) => {
-                const json = JSON.parse(fs.readFileSync(folder + '/' + statistics[id].X, 'utf8'));
-                const output = {};
-                json.forEach((district) => {
-                    district.blocks.forEach((block) => {
-                    output[block] = district.id;
-                    });
-                });
-                fs.writeFileSync(folder + '/' + bestFolder + '/' + statistics[id].X, JSON.stringify(output), 'utf8');
-                statistics[id].X = '/assets/data/best/' + statistics[id].X;
+                let exists = false;
                 const cols = [];
                 csvKeys.forEach((key) => {
                     cols.push(statistics[id][key]);
                 });
-                rows.push(cols.join(','));
+
+                rawRows.forEach((row) => {
+                    let allMatch = true;
+                    row.forEach((col, c) => {
+                        if (col !== cols[c]) {
+                            allMatch = false;
+                        }
+                    });
+                    if (allMatch) {
+                        exists = true;
+                    }
+                });
+
+                if (!exists) {
+                    rawRows.push(cols);
+                    rows.push(cols.join(','));
+                    const json = JSON.parse(fs.readFileSync(folder + '/' + statistics[id].X, 'utf8'));
+                    const output = {};
+                    json.forEach((district) => {
+                        district.blocks.forEach((block) => {
+                        output[block] = district.id;
+                        });
+                    });
+                    fs.writeFileSync(folder + '/' + bestFolder + '/' + statistics[id].X, JSON.stringify(output), 'utf8');
+                    statistics[id].X = '/assets/data/best/' + statistics[id].X;
+                }
             });
             csv += '\n' + rows.join('\n');
 
