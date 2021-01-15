@@ -39,6 +39,9 @@
 			Mehr Informationen dazu, wie dieser Prototyp entwickelt wurde, gibt es <a href="https://lab.technologiestiftung-berlin.de/projects/wahlbezirke/de/" target="blank"> in diesem ausführlichen Blogpost</a>. <br> 
 			Der Quellcode des Prototyps ist <a href="https://github.com/technologiestiftung/odis-wahlbezirke" target="blank">auf GitHub verfügbar</a>.
 		</p>
+		<p class="headline-05">
+			Hinweis: Diese Seite ist nicht für Mobilgeräte optimiert. Wir empfehlen die Nutzung dieser Seite auf einem Laptop oder Desktop-PC.
+		</p>
 	</div>
 </div>
 
