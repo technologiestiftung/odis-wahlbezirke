@@ -1,7 +1,7 @@
 <div class="odis">
   <div class="section-wrapper white">
     <div class="section pt-5">
-      <p class="headline-05"> Die Daten zu Wahlbezirken / Wahlkreisen wurden vom Amt für Statistik Berlin-Brandenburg (AfS) unter CC-BY veröffentlicht. Die Einwohnerdaten auf Blockebene wurden durch den Bezirk Tempelhof-Schöneberg, basierend auf Daten des AfS, zur Verfügung gestellt.
+      <p class="headline-05"> Die Daten zu Wahlbezirken / Wahlkreisen wurden vom Amt für Statistik Berlin-Brandenburg (AfS) unter CC-BY veröffentlicht (Datenstand: 2019). Die Einwohnerdaten auf Blockebene wurden durch den Bezirk Tempelhof-Schöneberg, basierend auf Daten des AfS, zur Verfügung gestellt (Datenstand: 2019).
         </p>
     </div>
     <div class="section pt-5 pb-5">
