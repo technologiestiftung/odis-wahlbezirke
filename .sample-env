@@ -1,4 +1,4 @@
-MAPBOXKEY=pk.eyJ1IjoidGVjaG5vbG9naWVzdGlmdHVuZyIsImEiOiJja2pjeGtqaXowejI5MnZzY28wZTNjM200In0.yrP7UCxTj6n1M2VjJpxnGQ
+MAPBOXKEY=
 SERVER=http://wahlbezirke.odis-berlin.de
 KEY_POPULATION=population
 KEY_DISTRICT=district
