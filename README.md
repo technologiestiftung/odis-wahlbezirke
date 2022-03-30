@@ -145,3 +145,61 @@ The compactness index is based on a circle. The circle has the perfect ratio of 
 - Would be nice if one could add/remove voting districts
 - Currently the system tries to move blocks so no voting district has too much inhabitants. In addition it would also be nice to reach the most even distribution across all districts (so also no small districts).
 - Include natural/build barriers in the network generation. Its nice if districts to not cross big roads or rivers. Therefore it would be nice to include this as a penality in the network generation. Data could be simply acquired through open street map. Then running intersections on the network edges and barriers.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://www.sebastianmeier.eu/"><img src="https://avatars.githubusercontent.com/u/302789?v=4?s=64" width="64px;" alt=""/><br /><sub><b>Sebastian Meier</b></sub></a><br /><a href="https://github.com/technologiestiftung/odis-wahlbezirke/commits?author=sebastian-meier" title="Code">💻</a> <a href="#data-sebastian-meier" title="Data">🔣</a> <a href="https://github.com/technologiestiftung/odis-wahlbezirke/commits?author=sebastian-meier" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/Lisa-Stubert"><img src="https://avatars.githubusercontent.com/u/61182572?v=4?s=64" width="64px;" alt=""/><br /><sub><b>Lisa-Stubert</b></sub></a><br /><a href="#content-Lisa-Stubert" title="Content">🖋</a> <a href="https://github.com/technologiestiftung/odis-wahlbezirke/commits?author=Lisa-Stubert" title="Code">💻</a></td>
+    <td align="center"><a href="http://toridykes.com/"><img src="https://avatars.githubusercontent.com/u/12991433?v=4?s=64" width="64px;" alt=""/><br /><sub><b>Tori Boeck</b></sub></a><br /><a href="#content-tori-d" title="Content">🖋</a></td>
+    <td align="center"><a href="https://github.com/vogelino"><img src="https://avatars.githubusercontent.com/u/2759340?v=4?s=64" width="64px;" alt=""/><br /><sub><b>Lucas Vogel</b></sub></a><br /><a href="https://github.com/technologiestiftung/odis-wahlbezirke/commits?author=vogelino" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Credits
+
+  <table>
+    <tr>
+      <td>
+        <a src="https://odis-berlin.de">
+          <br />
+          <br />
+          <img width="200" src="https://logos.citylab-berlin.org/logo-odis-berlin.svg" />
+        </a>
+      </td>
+      <td>
+        Together with: <a src="https://citylab-berlin.org/en/start/">
+          <br />
+          <br />
+          <img width="200" src="https://logos.citylab-berlin.org/logo-citylab-berlin.svg" />
+        </a>
+      </td>
+      <td>
+        A project by: <a src="https://www.technologiestiftung-berlin.de/en/">
+          <br />
+          <br />
+          <img width="150" src="https://logos.citylab-berlin.org/logo-technologiestiftung-berlin-en.svg" />
+        </a>
+      </td>
+      <td>
+        Supported by: <a src="https://www.berlin.de/rbmskzl/en/">
+          <br />
+          <br />
+          <img width="80" src="https://logos.citylab-berlin.org/logo-berlin-senweb-en.svg" />
+        </a>
+      </td>
+    </tr>
+  </table>
