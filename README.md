@@ -168,3 +168,38 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Credits
+
+  <table>
+    <tr>
+      <td>
+        <a src="https://odis-berlin.de">
+          <br />
+          <br />
+          <img width="200" src="https://logos.citylab-berlin.org/logo-odis-berlin.svg" />
+        </a>
+      </td>
+      <td>
+        Together with: <a src="https://citylab-berlin.org/en/start/">
+          <br />
+          <br />
+          <img width="200" src="https://logos.citylab-berlin.org/logo-citylab-berlin.svg" />
+        </a>
+      </td>
+      <td>
+        A project by: <a src="https://www.technologiestiftung-berlin.de/en/">
+          <br />
+          <br />
+          <img width="150" src="https://logos.citylab-berlin.org/logo-technologiestiftung-berlin-en.svg" />
+        </a>
+      </td>
+      <td>
+        Supported by: <a src="https://www.berlin.de/rbmskzl/en/">
+          <br />
+          <br />
+          <img width="80" src="https://logos.citylab-berlin.org/logo-berlin-senweb-en.svg" />
+        </a>
+      </td>
+    </tr>
+  </table>
