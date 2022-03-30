@@ -9,6 +9,18 @@
   "imageSize": 64,
   "commit": true,
   "commitConvention": "angular",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "sebastian-meier",
+      "name": "Sebastian Meier",
+      "avatar_url": "https://avatars.githubusercontent.com/u/302789?v=4",
+      "profile": "http://www.sebastianmeier.eu/",
+      "contributions": [
+        "code",
+        "data",
+        "doc"
+      ]
+    }
+  ],
   "contributorsPerLine": 7
 }
