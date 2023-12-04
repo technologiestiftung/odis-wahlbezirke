@@ -39,7 +39,7 @@
     "@turf/turf": "^5.1.6",
     "d3": "^6.3.1",
     "fs": "0.0.1-security",
-    "mapbox-gl": "^1.13.0",
+    "mapbox-gl": "^3.0.0",
     "node-fetch": "^2.6.1",
     "numeric": "^1.2.6",
     "sirv-cli": "^1.0.0"
