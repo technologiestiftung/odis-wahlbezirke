@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@turf/turf": "^5.1.6",
-    "d3": "^6.3.1",
+    "d3": "^7.0.0",
     "fs": "0.0.1-security",
     "mapbox-gl": "^1.13.0",
     "node-fetch": "^2.6.1",
