@@ -36,7 +36,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "@turf/turf": "^5.1.6",
+    "@turf/turf": "^7.0.0",
     "d3": "^6.3.1",
     "fs": "0.0.1-security",
     "mapbox-gl": "^1.13.0",
